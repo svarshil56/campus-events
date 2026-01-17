@@ -1,0 +1,179 @@
+.event-details-container {
+    width: 100vw;
+    height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: white;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Header - 20% height roughly (flex auto or specific) */
+.event-header {
+    height: 15vh;
+    /* Adjustable */
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.event-header h1 {
+    font-size: 3rem;
+    margin: 0;
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #fff, #aaa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Main Content Area */
+.event-main {
+    display: flex;
+    flex: 1;
+    /* Takes remaining height */
+    gap: 1.5rem;
+    height: 75vh;
+    /* Constraint to keep it within view if needed */
+}
+
+/* Left Column - 70% */
+.event-left {
+    flex: 7;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.event-image-container {
+    flex: 7;
+    /* Top 70% */
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.event-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.event-description-container {
+    flex: 3;
+    /* Bottom 30% */
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-y: auto;
+}
+
+.event-description-container h3 {
+    margin-top: 0;
+    color: #ffd700;
+}
+
+/* Right Column - 30% */
+.event-right {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.event-stats-card {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    /* Glass effect */
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.stat-item {
+    margin-bottom: 1rem;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.buy-ticket-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(45deg, #e11d48, #be123c);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: auto;
+}
+
+.buy-ticket-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4);
+}
+
+.event-qr-container {
+    height: 250px;
+    /* Fixed height or flex ratio? using flex logic below */
+    flex: 0 0 auto;
+    background: black;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.qr-code {
+    width: 180px;
+    height: 180px;
+    background: white;
+    /* Placeholder for actual QR */
+    padding: 10px;
+}
+
+.qr-blur {
+    filter: blur(10px);
+    opacity: 0.5;
+}
+
+.qr-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 1rem;
+}

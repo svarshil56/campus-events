@@ -1,0 +1,334 @@
+/* Fonts imported in index.css */
+
+.landing-container {
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar needs to be above the background */
+/* Navbar needs to be above the background */
+.navbar-wrapper {
+  position: relative;
+  z-index: 50;
+}
+
+.event-filters {
+  justify-content: center;
+  padding: 20px;
+  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.5rem 1.5rem;
+  /* px-6 py-2 */
+  border-radius: 9999px;
+  /* rounded-full */
+  border: 1px solid;
+  transition: all 0.3s;
+  font-size: 0.875rem;
+  /* text-sm */
+  letter-spacing: 0.1em;
+  /* tracking-widest */
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  /* text-white/70 */
+  border-color: rgba(255, 255, 255, 0.2);
+  /* border-white/20 */
+  cursor: pointer;
+}
+
+.filter-btn:hover {
+  border-color: #FFD700;
+  /* hover:border-stranger-gold */
+  color: #FFD700;
+  /* hover:text-stranger-gold */
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.filter-btn.active {
+  background-color: #FFD700;
+  /* bg-stranger-gold */
+  color: black;
+  border-color: #FFD700;
+  font-weight: 700;
+  /* font-bold */
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.header-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.landing-bg-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: linear-gradient(to bottom right, black, #1a0000, black);
+}
+
+.navbar-wrapper {
+  position: relative;
+  z-index: 50;
+}
+
+.events-section {
+  position: relative;
+  z-index: 10;
+  background-color: #050000;
+  /* deep-dark */
+  min-height: 100vh;
+  width: 100%;
+  padding-top: 6rem;
+  /* py-24 */
+  padding-bottom: 6rem;
+  padding-left: 1.5rem;
+  /* px-6 */
+  padding-right: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (min-width: 768px) {
+  .events-section {
+    padding-left: 3rem;
+    /* md:px-12 */
+    padding-right: 3rem;
+  }
+}
+
+.events-content-wrapper {
+  max-width: 80rem;
+  /* max-w-7xl */
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3rem;
+  /* gap-12 */
+}
+
+.events-header-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  /* gap-8 */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 3rem;
+  /* pb-12 */
+}
+
+.events-header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.events-header-image {
+  width: 100%;
+  max-width: 56rem;
+  /* max-w-4xl */
+  object-fit: contain;
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3));
+  margin-bottom: 1rem;
+  /* mb-4 */
+}
+
+.events-header-text {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 300;
+  /* font-light */
+  font-size: 1.125rem;
+  /* text-lg */
+  letter-spacing: 0.025em;
+  /* tracking-wide */
+  max-width: 42rem;
+  /* max-w-2xl */
+}
+
+.events-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 2rem;
+  /* gap-8 */
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .events-cards-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Event Card Styles */
+.event-card {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.05);
+  /* bg-white/5 */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  border-radius: 0.75rem;
+  /* rounded-xl */
+  transition: border-color 0.5s;
+  cursor: pointer;
+}
+
+.event-card:hover {
+  border-color: rgba(255, 215, 0, 0.6);
+  /* hover:border-stranger-gold/60 */
+}
+
+/* Hover Glow Effect */
+.event-card-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(255, 215, 0, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+
+.event-card:hover .event-card-glow {
+  opacity: 1;
+}
+
+.event-card-content {
+  padding: 2rem;
+  /* p-8 */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 280px;
+  position: relative;
+  /* Ensure content is above glow */
+  z-index: 1;
+}
+
+.event-card-header {
+  width: 100%;
+}
+
+.event-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  /* mb-4 */
+}
+
+.event-tag {
+  font-size: 0.75rem;
+  /* text-xs */
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #FFD700;
+  /* stranger-gold */
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.event-date {
+  font-size: 0.75rem;
+  /* text-xs */
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.1em;
+  /* tracking-widest */
+  text-transform: uppercase;
+}
+
+.event-title {
+  font-size: 1.875rem;
+  /* text-3xl */
+  font-family: 'Cinzel', serif;
+  color: white;
+  transition: color 0.3s;
+  letter-spacing: 0.025em;
+  /* tracking-wide */
+  margin-bottom: 0.75rem;
+  /* mb-3 */
+}
+
+.event-card:hover .event-title {
+  color: #FFD700;
+}
+
+.event-desc {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 300;
+  /* font-light */
+  line-height: 1.625;
+  /* leading-relaxed */
+  font-size: 0.875rem;
+  /* text-sm */
+}
+
+.event-footer {
+  margin-top: 2rem;
+  /* mt-8 */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
+  /* text-xs */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  /* tracking-widest */
+  transition: color 0.3s;
+}
+
+.event-card:hover .event-footer {
+  color: white;
+}
+
+.event-arrow-icon {
+  width: 0.75rem;
+  /* w-3 */
+  height: 0.75rem;
+  /* h-3 */
+  transition: transform 0.3s;
+}
+
+.event-card:hover .event-arrow-icon {
+  transform: translateX(0.25rem);
+}
+
+.event-button {
+  background-color: #FFD700;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  color: black;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.event-button:hover {
+  background-color: rgba(255, 215, 0, 0.6);
+}

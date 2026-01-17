@@ -1,0 +1,146 @@
+.about-container {
+    min-height: 100vh;
+    background-color: #050000;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    /* Stack vertically */
+    align-items: center;
+    position: relative;
+    padding: 0;
+    padding-top: 80px;
+    /* Adjust top padding for spacing from navbar */
+    gap: 2rem;
+    /* Space between image and text */
+}
+
+/* Background overlay similar to LandingPage if desired, but keeping simple for now */
+
+.about-image {
+    height: 8rem;
+    width: auto;
+    /* Allow width to shrink to fit height logic */
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 1rem;
+    border: none;
+    /* User requested no border */
+}
+
+.about-text {
+    text-align: center;
+    max-width: 800px;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Styling for refactored About.jsx content */
+
+.about-intro {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.about-section {
+    width: 100%;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    /* Center content in sections */
+}
+
+.about-section h2 {
+    font-family: 'Cinzel', serif;
+    color: #FFD700;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+    text-align: center;
+}
+
+.about-list,
+.about-features-list,
+.about-community-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    text-align: left;
+    /* Keep list items left-aligned for readability */
+    width: 100%;
+    max-width: 700px;
+    /* Constrain width of lists */
+}
+
+.about-list li,
+.about-features-list li,
+.about-community-list li {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.75);
+    padding-left: 1.5rem;
+    position: relative;
+    line-height: 1.6;
+}
+
+.about-list li::before,
+.about-features-list li::before,
+.about-community-list li::before {
+    content: '►';
+    color: #FFD700;
+    position: absolute;
+    left: 0;
+    top: 2px;
+    font-size: 0.8rem;
+}
+
+.about-list li strong,
+.about-community-list li strong {
+    color: white;
+    font-weight: 600;
+}
+
+.about-note {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.about-footer-text {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    color: white;
+    text-align: center;
+    border-top: 1px solid rgba(255, 215, 0, 0.3);
+    padding-top: 2rem;
+    width: 100%;
+}
+
+/* Specific overrides for headings inside about-text if needed, but above h2 covers it */
+.about-text h1 {
+    font-family: 'Cinzel', serif;
+    color: #FFD700;
+    font-size: 3rem;
+    margin: 0;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.about-text p {
+    font-family: 'Poppins', sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    font-weight: 300;
+}

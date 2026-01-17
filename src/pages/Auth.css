@@ -1,0 +1,199 @@
+.auth-page-container {
+    position: relative;
+    min-height: 100vh;
+    color: #F0F0F0;
+    /* bone-white */
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+
+.unicorn-bg-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.navbar-wrapper {
+    position: relative;
+    z-index: 50;
+}
+
+.auth-content-wrapper {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    /* Center the pair horizontally */
+    gap: 35rem;
+    /* Space between form and image */
+    pointer-events: none;
+    padding: 2rem;
+}
+
+.auth-card {
+    margin-top: 3rem;
+    width: 100%;
+    max-width: 28rem;
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    pointer-events: auto;
+    flex-shrink: 0;
+    /* Prevent squishing */
+}
+
+/* Image on the right */
+.auth-side-image {
+    width: 100%;
+    max-width: 500px;
+    /* Adjust as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+.auth-side-image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
+}
+
+@media (max-width: 1024px) {
+    .auth-content-wrapper {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .auth-side-image {
+        max-width: 300px;
+        order: -1;
+        /* Show image on top on mobile? Or remove order to show below */
+    }
+}
+
+.auth-heading {
+    font-size: 2.25rem;
+    /* text-4xl */
+    line-height: 2.5rem;
+    font-family: 'Cinzel', serif;
+    text-align: center;
+    color: #FFD700;
+    /* stranger-gold */
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+    /* tracking-wider */
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* gap-6 */
+}
+
+.auth-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-label {
+    display: block;
+    font-size: 0.875rem;
+    /* text-sm */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    /* tracking-widest */
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.5rem;
+}
+
+.auth-input {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.25rem;
+    padding: 0.75rem 1rem;
+    color: white;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.auth-input:focus {
+    border-color: #FFD700;
+    outline: none;
+}
+
+.auth-button {
+    background-color: #FFD700;
+    color: black;
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    /* text-xl */
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    /* tracking-widest */
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.15s ease-in-out;
+    margin-top: 0.5rem;
+}
+
+.auth-button:hover {
+    background-color: #facc15;
+    /* yellow-400 */
+}
+
+.auth-img {
+    width: 40%;
+    flex: 1;
+    align-items: left;
+    justify-content: left;
+}
+
+/* Custom Footer "Vecna sees everything" */
+.vecna-footer {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 238, 0, 0.1);
+    padding: 0.5rem 1.5rem;
+    border-radius: 999px;
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
+
+    font-family: 'Cinzel', serif;
+    font-style: italic;
+    font-weight: 700;
+    color: #ffd700;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    pointer-events: none;
+    /* Let clicks pass through if needed, or auto */
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* Hide original Unicorn Studio Branding if possible */
+a[href*="unicorn.studio"],
+.us-branding {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
