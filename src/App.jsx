@@ -11,13 +11,14 @@ function App() {
     return (
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <Routes>
-                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="/" element={<Navigate to="/home" replace />} />
+                <Route path="/home" element={<LandingPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/about" element={<About />} />
 
                 <Route element={<ProtectedRoutes />}>
-                    <Route path="/home" element={<LandingPage />} />
+                    {/* Protected routes can be added here in future */}
                 </Route>
                 <Route path="/events/:eventId" element={<EventDetails />} />
             </Routes>
