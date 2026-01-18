@@ -54,7 +54,9 @@ const Navbar = () => {
                     </NavLink>
                 </li>
                 <li><NavLink to="/about"><img src={aboutTextImg} alt="About" className="nav-img-link" /></NavLink></li>
-                <li><NavLink to="/add-event"><img src={addEventTextImg} alt="Add Event" className="nav-img-link" /></NavLink></li>
+                {user && (
+                    <li><NavLink to="/add-event"><img src={addEventTextImg} alt="Add Event" className="nav-img-link" /></NavLink></li>
+                )}
 
                 {!user && (
                     <>
