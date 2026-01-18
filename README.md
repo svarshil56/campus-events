@@ -30,7 +30,7 @@ A modern, dynamic web application for managing campus events, verifying registra
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/yourusername/campus-events.git
+    git clone https://github.com/svarshil56/campus-events.git
     cd campus-events
     ```
 
