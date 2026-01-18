@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
     doc,
     getDoc,
+    onSnapshot,
     runTransaction,
     collection,
     query,
@@ -32,41 +33,49 @@ export default function EventDetails() {
 
     // Fetch Event Data + Existing Registration
     useEffect(() => {
-        const load = async () => {
-            try {
-                // 1. Load event
-                const eventRef = doc(database, "events", eventId);
-                const snap = await getDoc(eventRef);
-
-                if (!snap.exists()) {
-                    setNotFound(true);
-                    return;
-                }
-
+        // 1. Listen for event updates (Real-time)
+        const eventRef = doc(database, "events", eventId);
+        const unsubscribeEvent = onSnapshot(eventRef, (snap) => {
+            if (!snap.exists()) {
+                setNotFound(true);
+            } else {
                 setEvent(snap.data());
+                // Reset notFound in case it was briefly true (optional)
+                setNotFound(false);
+            }
+            setLoading(false);
+        }, (error) => {
+            console.error("Error fetching event:", error);
+            setNotFound(true);
+            setLoading(false);
+        });
 
-                // 2. Check if already registered
-                if (user) {
-                    const q = query(
-                        collection(database, "events", eventId, "registrations"),
-                        where("uid", "==", user.uid)
-                    );
+        // 2. Check if already registered (can remain one-time fetch or also be real-time)
+        // For now, keeping registration check as one-time fetch for simplicity, 
+        // as user's own registration status is less likely to change externally during the session.
+        const checkRegistration = async () => {
+            if (user) {
+                const q = query(
+                    collection(database, "events", eventId, "registrations"),
+                    where("uid", "==", user.uid)
+                );
 
+                try {
                     const found = await getDocs(q);
                     if (!found.empty) {
                         const docSnap = found.docs[0];
                         setRegId(docSnap.id); // ex: REG-0042
                     }
+                } catch (err) {
+                    console.error("Error checking registration:", err);
                 }
-            } catch (err) {
-                console.error(err);
-                setNotFound(true);
-            } finally {
-                setLoading(false);
             }
         };
 
-        load();
+        checkRegistration();
+
+        // Cleanup listener
+        return () => unsubscribeEvent();
     }, [eventId, user]);
 
     // Registration Handler
@@ -136,7 +145,7 @@ export default function EventDetails() {
             <Navbar />
 
             {/* Header */}
-            <div className="event-header" style={{ marginTop: "60px" }}>
+            <div className="event-header" style={{ marginTop: "30px" }}>
                 <h1>{event.title}</h1>
             </div>
 
@@ -145,7 +154,11 @@ export default function EventDetails() {
                 {/* LEFT */}
                 <div className="event-left">
                     <HeroSection title={event.title} image={event.image} />
-                    <DescriptionSection description={event.description} />
+                    <DescriptionSection
+                        description={event.description}
+                        contact1={event.contact1}
+                        contact2={event.contact2}
+                    />
                 </div>
 
                 {/* RIGHT */}

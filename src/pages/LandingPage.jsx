@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { database } from '../services/firebase';
 import Navbar from '../components/Navbar';
 import { motion } from 'framer-motion';
 import eventsTitleImage from '../assets/events-title.png';
@@ -9,57 +11,29 @@ const LandingPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [activeFilter, setActiveFilter] = useState('All');
-    const allEvents = [
-        {
-            tag: 'Concerts',
-            title: 'Pre-SYNAPSE',
-            date: 'JAN 10 • Weekends',
-            desc: 'Its just the beginning',
-            button: 'View Details',
-            path: '/events/synapse'
-        },
-        {
-            tag: 'Concerts',
-            title: 'SYNAPSE',
-            date: 'FEB 28 - MARCH 1 • Weekends',
-            desc: 'Largest Gujarat Techno-Cultural fest',
-            button: 'View Details',
-            path: '/events/synapse'
-        },
-        {
-            tag: 'Workshops',
-            title: 'TEDx-DAIICT',
-            date: 'MAR 10 • Weekends',
-            desc: 'Inter-branch cricket showdown. Glory awaits the victors.',
-            button: 'View Details',
-            path: '/events/tarang'
-        },
-        {
-            tag: 'Cultural',
-            title: 'TARANG',
-            date: 'Oct 20 • 6 PM',
-            desc: 'A retro-synthwave musical journey under the stars.',
-            button: 'View Details',
-            path: '/events/tarang'
-        },
-        {
-            tag: 'Sports',
-            title: 'CONCOURS',
-            date: 'Nov 02 • Weekends',
-            desc: 'Inter-branch cricket showdown. Glory awaits the victors.',
-            button: 'View Details',
-            path: '/events/tarang'
-        },
-        {
-            tag: 'Technical',
-            title: 'I-FEST 2027',
-            date: 'Oct 14 • 48 Hrs',
-            desc: 'Code, caffeine, and chaos. Build the future in 48 hours.',
-            button: 'View Details',
-            path: '/events/synapse'
-        },
-    ];
-    const filteredEvents = activeFilter === 'All' ? allEvents : allEvents.filter(event => event.tag === activeFilter);
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Fetch events from Firestore
+    useEffect(() => {
+        const unsubscribe = onSnapshot(collection(database, 'events'), (snapshot) => {
+            const fetchedEvents = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                path: `/events/${doc.id}`, // Dynamic path
+                button: 'View Details'
+            }));
+            setEvents(fetchedEvents);
+            setLoading(false);
+        }, (error) => {
+            console.error("Error fetching events:", error);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    const filteredEvents = activeFilter === 'All' ? events : events.filter(event => event.tag === activeFilter);
 
     useEffect(() => {
         if (location.hash === '#events') {
@@ -140,7 +114,7 @@ const LandingPage = () => {
                                             {event.title}
                                         </h3>
                                         <p className="event-desc">
-                                            {event.desc}
+                                            {event.description || event.desc}
                                         </p>
                                         <button
                                             className="event-button"

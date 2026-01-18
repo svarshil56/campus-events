@@ -12,10 +12,11 @@
 
 /* Header - 20% height roughly (flex auto or specific) */
 .event-header {
-    height: 15vh;
+    height: 17vh;
     /* Adjustable */
     display: flex;
     align-items: center;
+    justify-content: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -49,7 +50,7 @@
 }
 
 .event-image-container {
-    flex: 7;
+    flex: 10;
     /* Top 70% */
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;

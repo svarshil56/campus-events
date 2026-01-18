@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import About from './pages/About';
 import EventDetails from './pages/EventDetails';
+import Eventform from './pages/Eventform';
 import ProtectedRoutes from './components/ProtectedRoutes'; // Import the new component
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
 
                 <Route element={<ProtectedRoutes />}>
                     {/* Protected routes can be added here in future */}
+                    <Route path="/add-event" element={<Eventform />} />
                 </Route>
                 <Route path="/events/:eventId" element={<EventDetails />} />
             </Routes>

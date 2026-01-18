@@ -16,13 +16,15 @@ const StatsCard = ({ event, user, regId, onRegister }) => {
                         <div className="stat-value">
                             {event.startAt?.toDate
                                 ? event.startAt.toDate().toLocaleString()
-                                : new Date(event.startAt).toLocaleString()}
+                                : event.startAt
+                                    ? new Date(event.startAt).toLocaleString()
+                                    : event.date}
                         </div>
                     </div>
 
                     <div className="stat-item">
                         <div className="stat-label">Participants</div>
-                        <div className="stat-value">{event.registeredCount} / {event.capacity}</div>
+                        <div className="stat-value">{event.currentRegNo} / 10000</div>
                     </div>
                 </div>
 

@@ -39,3 +39,8 @@ body {
 #root {
     width: 100%;
 }
+/* Global Text Selection Override */
+::selection {
+    background: #FFD700; /* Gold background */
+    color: black; /* Black text */
+}

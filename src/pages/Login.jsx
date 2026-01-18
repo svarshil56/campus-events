@@ -5,7 +5,7 @@ import loginimg from '../assets/loginimg.png'
 import { auth, googleProvider, database } from '../services/firebase';
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -39,12 +39,22 @@ const Login = () => {
         }
     }, []);
 
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/home';
+
+    useEffect(() => {
+        // Redirect if already logged in
+        if (auth.currentUser) {
+            navigate(from, { replace: true });
+        }
+    }, [navigate, from]);
+
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            navigate('/home'); // Redirect to home or dashboard
+            navigate(from, { replace: true });
         } catch (err) {
             console.error("Login Error:", err.code, err.message);
             // Custom Error Messaging
@@ -67,14 +77,19 @@ const Login = () => {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
 
-            // Save/Merge user data to Firestore
-            await setDoc(doc(database, "users", user.uid), {
-                name: user.displayName,
-                email: user.email,
-                lastLogin: new Date()
-            }, { merge: true });
+            try {
+                // Save/Merge user data to Firestore
+                await setDoc(doc(database, "users", user.uid), {
+                    name: user.displayName,
+                    email: user.email,
+                    lastLogin: new Date()
+                }, { merge: true });
+            } catch (firestoreError) {
+                console.warn("Could not save user profile to Firestore (likely permissions):", firestoreError);
+                // Proceed anyway as Auth was successful
+            }
 
-            navigate('/home');
+            navigate(from, { replace: true });
         } catch (err) {
             setError(err.message);
         }
