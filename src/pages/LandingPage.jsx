@@ -113,15 +113,36 @@ const LandingPage = () => {
                                         <h3 className="event-title">
                                             {event.title}
                                         </h3>
-                                        <p className="event-desc">
-                                            {event.description || event.desc}
-                                        </p>
                                         <button
                                             className="event-button"
                                             onClick={() => navigate(event.path)}
                                         >
                                             {event.button}
                                         </button>
+
+                                        {/* Progress Bar */}
+                                        <div className="event-progress-wrapper" style={{ marginTop: '1rem', width: '100%' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                                                <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
+                                                    Seats Filled
+                                                </span>
+                                                <span style={{ fontSize: '0.7rem', color: '#FFD700', fontWeight: 'bold' }}>
+                                                    {event.currentRegNo || 0} / 100
+                                                </span>
+                                            </div>
+                                            <div className="event-progress-bar-bg" style={{ width: '100%', height: '4px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
+                                                <div
+                                                    className="event-progress-bar-fill"
+                                                    style={{
+                                                        width: `${Math.min(((event.currentRegNo || 0) / 100) * 100, 100)}%`,
+                                                        height: '100%',
+                                                        backgroundColor: '#FFD700',
+                                                        borderRadius: '2px',
+                                                        boxShadow: '0 0 10px rgba(255,215,0,0.5)'
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
