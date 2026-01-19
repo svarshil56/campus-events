@@ -68,6 +68,7 @@ const LandingPage = () => {
                                 src={eventsTitleImage}
                                 alt="Experience Campus Life with DAU Events"
                                 className="events-header-image"
+                                fetchPriority="high"
                             />
                             <p className="events-header-text">
                                 Stay looped in with the pulse of DAU. Don't blink, or you might miss the action.

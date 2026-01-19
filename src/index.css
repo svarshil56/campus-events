@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap');
-
 *,
 *::before,
 *::after {
@@ -39,8 +37,11 @@ body {
 #root {
     width: 100%;
 }
+
 /* Global Text Selection Override */
 ::selection {
-    background: #FFD700; /* Gold background */
-    color: black; /* Black text */
+    background: #FFD700;
+    /* Gold background */
+    color: black;
+    /* Black text */
 }
