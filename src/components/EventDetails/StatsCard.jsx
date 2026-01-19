@@ -1,7 +1,7 @@
 import React from 'react';
 import QRCode from "react-qr-code";
 
-const StatsCard = ({ event, user, regId, onRegister }) => {
+const StatsCard = ({ event, user, regId, processing, onRegister }) => {
     return (
         <>
             <div className="event-stats-card">
@@ -24,7 +24,7 @@ const StatsCard = ({ event, user, regId, onRegister }) => {
 
                     <div className="stat-item">
                         <div className="stat-label">Participants</div>
-                        <div className="stat-value">{event.currentRegNo} / 10000</div>
+                        <div className="stat-value">{event.currentRegNo} / 100</div>
                     </div>
                 </div>
 
@@ -36,8 +36,8 @@ const StatsCard = ({ event, user, regId, onRegister }) => {
                 )}
 
                 {user && !regId && (
-                    <button className="buy-ticket-btn" onClick={onRegister}>
-                        Register Now
+                    <button className="buy-ticket-btn" onClick={onRegister} disabled={processing}>
+                        {processing ? 'Registering...' : 'Register Now'}
                     </button>
                 )}
 

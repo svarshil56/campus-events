@@ -5,7 +5,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import About from './pages/About';
 import EventDetails from './pages/EventDetails';
-import Eventform from './pages/Eventform';
+
+import AdminEventForm from './pages/admin/AdminEventForm';
 import ProtectedRoutes from './components/ProtectedRoutes'; // Import the new component
 
 function App() {
@@ -18,9 +19,9 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/about" element={<About />} />
 
-                <Route element={<ProtectedRoutes />}>
+                <Route element={<ProtectedRoutes roleRequired="organizer" />}>
                     {/* Protected routes can be added here in future */}
-                    <Route path="/add-event" element={<Eventform />} />
+                    <Route path="/add-event" element={<AdminEventForm />} />
                 </Route>
                 <Route path="/events/:eventId" element={<EventDetails />} />
             </Routes>

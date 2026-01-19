@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, doc, setDoc } from 'firebase/firestore';
-import { database } from '../services/firebase';
-import Navbar from '../components/Navbar';
-import './Eventform.css';
+import { database, auth } from '../../services/firebase';
+import Navbar from '../../components/Navbar';
+import './AdminEventForm.css';
 
-const Eventform = () => {
+const AdminEventForm = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
@@ -40,14 +40,16 @@ const Eventform = () => {
             const docId = formData.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
             await setDoc(doc(database, 'events', docId), {
-                title: formData.name, 
+                title: formData.name,
                 tag: formData.tag,
-                description: formData.description, 
-                date: `${formData.date} • ${formData.time}`, 
+                description: formData.description,
+                date: `${formData.date} • ${formData.time}`,
                 location: formData.location,
-                venue: formData.location, 
+                venue: formData.location,
                 contact1: `${formData.contact1Name} (${formData.contact1Phone})`,
                 contact2: `${formData.contact2Name} (${formData.contact2Phone})`,
+                organizerId: auth.currentUser ? auth.currentUser.uid : 'unknown',
+                organizerName: auth.currentUser ? auth.currentUser.displayName : 'Anonymous',
                 createdAt: new Date(),
                 currentRegNo: 0
             });
@@ -229,4 +231,4 @@ const Eventform = () => {
     );
 }
 
-export default Eventform;
+export default AdminEventForm;

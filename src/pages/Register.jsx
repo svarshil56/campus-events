@@ -50,6 +50,7 @@ const Register = () => {
             await setDoc(doc(database, "users", userCredential.user.uid), {
                 name: name,
                 email: email,
+                role: 'student',
                 createdAt: new Date()
             });
 
@@ -129,6 +130,7 @@ const Register = () => {
                                 required
                             />
                         </div>
+
                         <button type="submit" className="auth-button">
                             Register
                         </button>

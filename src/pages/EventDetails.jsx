@@ -78,51 +78,64 @@ export default function EventDetails() {
         return () => unsubscribeEvent();
     }, [eventId, user]);
 
+    const [processing, setProcessing] = useState(false);
+
     // Registration Handler
     async function handleRegister() {
         if (!user) return alert("Please login first!");
+        if (regId) return alert("You are already registered!");
+        if (processing) return;
 
         // Collect studentId (replace with modal later)
         const studentId = prompt("Enter your Student ID:");
         if (!studentId) return;
 
+        setProcessing(true);
+
         const eventRef = doc(database, "events", eventId);
 
-        await runTransaction(database, async (transaction) => {
-            const eventSnap = await transaction.get(eventRef);
-            if (!eventSnap.exists()) throw "Event does not exist!";
+        try {
+            await runTransaction(database, async (transaction) => {
+                const eventSnap = await transaction.get(eventRef);
+                if (!eventSnap.exists()) throw "Event does not exist!";
 
-            const current = eventSnap.data().currentRegNo || 0;
-            const next = current + 1;
+                const current = eventSnap.data().currentRegNo || 0;
+                const next = current + 1;
 
-            // Format: eventname_reg_0XX
-            const padded = String(next).padStart(3, "0");
-            const newRegId = `${eventId}_reg_${padded}`;
+                // Format: eventname_reg_0XX
+                const padded = String(next).padStart(3, "0");
+                const newRegId = `${eventId}_reg_${padded}`;
 
-            const regRef = doc(
-                database,
-                "events",
-                eventId,
-                "registrations",
-                newRegId
-            );
+                const regRef = doc(
+                    database,
+                    "events",
+                    eventId,
+                    "registrations",
+                    newRegId
+                );
 
-            transaction.set(regRef, {
-                regId: newRegId,
-                uid: user.uid,
-                name: user.displayName || "",
-                email: user.email,
-                studentId,
-                paid: false,
-                verified: false,
-                createdAt: serverTimestamp(),
+                transaction.set(regRef, {
+                    regId: newRegId,
+                    uid: user.uid,
+                    name: user.displayName || "",
+                    email: user.email,
+                    studentId,
+                    paid: false,
+                    verified: false,
+                    createdAt: serverTimestamp(),
+                });
+
+                transaction.update(eventRef, { currentRegNo: next });
+                setRegId(newRegId);
             });
 
-            transaction.update(eventRef, { currentRegNo: next });
-            setRegId(newRegId);
-        });
-
-        alert("Registration Successful!");
+            alert("Registration Successful!");
+        } catch (error) {
+            console.error("Registration failed: ", error);
+            alert("Registration failed: " + error.message);
+        } finally {
+            setProcessing(false);
+        }
     }
 
     // UI States
@@ -167,6 +180,7 @@ export default function EventDetails() {
                         event={event}
                         user={user}
                         regId={regId}
+                        processing={processing}
                         onRegister={handleRegister}
                     />
                 </div>

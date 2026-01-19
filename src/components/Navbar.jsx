@@ -9,17 +9,31 @@ import loginTextImg from '../assets/login_text.png';
 import registerTextImg from '../assets/register_text.png';
 import eventsTextImg from '../assets/Events.png';
 import addEventTextImg from '../assets/AddEvent.png';
-import { auth } from '../services/firebase';
+import { auth, database } from '../services/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
+    const [role, setRole] = useState(null);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
+            if (currentUser) {
+                try {
+                    const userDoc = await getDoc(doc(database, "users", currentUser.uid));
+                    if (userDoc.exists()) {
+                        setRole(userDoc.data().role);
+                    }
+                } catch (e) {
+                    console.error("Error fetching role", e);
+                }
+            } else {
+                setRole(null);
+            }
         });
         return () => unsubscribe();
     }, []);
@@ -54,7 +68,7 @@ const Navbar = () => {
                     </NavLink>
                 </li>
                 <li><NavLink to="/about"><img src={aboutTextImg} alt="About" className="nav-img-link" /></NavLink></li>
-                {user && (
+                {user && role === 'organizer' && (
                     <li><NavLink to="/add-event"><img src={addEventTextImg} alt="Add Event" className="nav-img-link" /></NavLink></li>
                 )}
 
