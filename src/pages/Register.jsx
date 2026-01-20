@@ -136,15 +136,15 @@ const Register = () => {
                         </button>
                     </form>
 
-                    <div className="google-signin-container" style={{ textAlign: 'center', marginTop: '1rem' }}>
+                    <div className="google-signin-container" style={{ textAlign: 'center', marginTop: '0rem' }}>
                         <p>OR</p>
                         <button
                             type="button"
                             className="auth-button google-btn"
                             onClick={handleGoogleRegister}
-                            style={{ backgroundColor: '#fff', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', width: '100%' }}
+                            style={{ backgroundColor: '#fff', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px', width: '100%' }}
                         >
-                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" style={{ width: '20px', height: '20px' }} />
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" style={{ width: '20px', height: '15px' }} />
                             Sign up with Google
                         </button>
                     </div>

@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import './Auth.css';
 import loginimg from '../assets/loginimg.png'
 import { auth, googleProvider, database } from '../services/firebase';
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [message, setMessage] = useState(''); // For success messages
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -52,6 +53,7 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
+        setMessage('');
         try {
             await signInWithEmailAndPassword(auth, email, password);
             navigate(from, { replace: true });
@@ -65,14 +67,39 @@ const Login = () => {
                 setError('No user found with this email. Please register first.');
             } else if (err.code === 'auth/invalid-email') {
                 setError('Invalid email format.');
+            } else if (err.code === 'auth/too-many-requests') {
+                setError('Too many failed attempts. Please try again later.');
             } else {
                 setError('Failed to login. Please try again.');
             }
         }
     };
 
+    const handleForgotPassword = async () => {
+        if (!email) {
+            setError('Please enter your email address to reset password.');
+            return;
+        }
+        setError('');
+        setMessage('');
+        try {
+            await sendPasswordResetEmail(auth, email);
+            setMessage('Password reset email sent! Check your inbox.');
+        } catch (err) {
+            console.error("Reset Password Error:", err.code, err.message);
+            if (err.code === 'auth/user-not-found') {
+                setError('No account found with this email.');
+            } else if (err.code === 'auth/invalid-email') {
+                setError('Invalid email format.');
+            } else {
+                setError('Failed to send reset email. Try again.');
+            }
+        }
+    };
+
     const handleGoogleLogin = async () => {
         setError('');
+        setMessage('');
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
@@ -109,7 +136,8 @@ const Login = () => {
             <div className="auth-content-wrapper">
                 <div className="auth-card">
                     <h2 className="auth-heading">Login</h2>
-                    {error && <p className="auth-error" style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+                    {error && <p className="auth-error" style={{ color: 'red', textAlign: 'center', marginBottom: '1rem' }}>{error}</p>}
+                    {message && <p className="auth-success" style={{ color: '#4caf50', textAlign: 'center', marginBottom: '1rem' }}>{message}</p>}
                     <form className="auth-form" onSubmit={handleLogin}>
                         <div className="auth-form-group">
                             <label className="auth-label">Email</label>
@@ -132,6 +160,24 @@ const Login = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                             />
+                            <div style={{ textAlign: 'right', marginTop: '0.5rem' }}>
+                                <button
+                                    type="button"
+                                    onClick={handleForgotPassword}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        color: '#FFD700',
+                                        cursor: 'pointer',
+                                        fontSize: '0.8rem',
+                                        textDecoration: 'underline',
+                                        fontFamily: 'inherit',
+                                        padding: 0
+                                    }}
+                                >
+                                    Forgot Password?
+                                </button>
+                            </div>
                         </div>
                         <button type="submit" className="auth-button">
                             Enter the Portal

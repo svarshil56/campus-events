@@ -1,10 +1,12 @@
 .auth-page-container {
     position: relative;
-    min-height: 100vh;
+    height: 100vh;
     color: #F0F0F0;
     /* bone-white */
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .unicorn-bg-layer {
@@ -20,24 +22,30 @@
 .navbar-wrapper {
     position: relative;
     z-index: 50;
+    flex-shrink: 0;
 }
 
 .auth-content-wrapper {
     position: relative;
     z-index: 10;
     display: flex;
-    min-height: 100vh;
+    flex: 1;
+    /* Take remaining height */
     align-items: center;
     justify-content: center;
     /* Center the pair horizontally */
     gap: 35rem;
-    /* Space between form and image */
+    /* Space between form and image - Reduced from 35rem to fit better */
     pointer-events: none;
     padding: 2rem;
+    overflow-y: auto;
+    /* Allow internal scrolling if vertical space is really too small, though we aim to fit */
+    max-height: 100%;
 }
 
 .auth-card {
-    margin-top: 3rem;
+    margin-top: 0;
+    /* Removed explicit margin */
     width: 100%;
     max-width: 28rem;
     padding: 2rem;
@@ -65,6 +73,8 @@
 .auth-side-image img {
     width: 100%;
     height: auto;
+    max-height: 80vh;
+    /* Ensure image doesn't overflow vertically */
     object-fit: contain;
     filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
 }
@@ -72,13 +82,23 @@
 @media (max-width: 1024px) {
     .auth-content-wrapper {
         flex-direction: column;
-        gap: 2rem;
+        gap: 1rem;
+        justify-content: flex-start;
+        /* Ensure content starts at top on mobile */
+        padding-top: 2rem;
     }
 
     .auth-side-image {
         max-width: 300px;
         order: -1;
         /* Show image on top on mobile? Or remove order to show below */
+    }
+
+    .auth-page-container {
+        height: auto;
+        /* Allow scrolling on mobile if needed */
+        min-height: 100vh;
+        overflow-y: auto;
     }
 }
 
@@ -90,7 +110,7 @@
     text-align: center;
     color: #FFD700;
     /* stranger-gold */
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     letter-spacing: 0.05em;
     /* tracking-wider */
 }
