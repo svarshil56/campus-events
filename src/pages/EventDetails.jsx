@@ -31,6 +31,8 @@ export default function EventDetails() {
 
     const [user] = useAuthState(auth);
 
+    const [userRole, setUserRole] = useState(null);
+
     // Fetch Event Data + Existing Registration
     useEffect(() => {
         // 1. Listen for event updates (Real-time)
@@ -53,8 +55,19 @@ export default function EventDetails() {
         // 2. Check if already registered (can remain one-time fetch or also be real-time)
         // For now, keeping registration check as one-time fetch for simplicity, 
         // as user's own registration status is less likely to change externally during the session.
-        const checkRegistration = async () => {
+        const checkRegistrationAndRole = async () => {
             if (user) {
+                // Fetch Role
+                try {
+                    const userDoc = await getDoc(doc(database, "users", user.uid));
+                    if (userDoc.exists()) {
+                        setUserRole(userDoc.data().role);
+                    }
+                } catch (e) {
+                    console.error("Error fetching role:", e);
+                }
+
+                // Check Registration
                 const q = query(
                     collection(database, "events", eventId, "registrations"),
                     where("uid", "==", user.uid)
@@ -72,7 +85,7 @@ export default function EventDetails() {
             }
         };
 
-        checkRegistration();
+        checkRegistrationAndRole();
 
         // Cleanup listener
         return () => unsubscribeEvent();
@@ -83,6 +96,7 @@ export default function EventDetails() {
     // Registration Handler
     async function handleRegister() {
         if (!user) return alert("Please login first!");
+        if (userRole === 'organizer') return alert("Organizers cannot join events.");
         if (regId) return alert("You are already registered!");
         if (processing) return;
 
@@ -95,7 +109,7 @@ export default function EventDetails() {
         const eventRef = doc(database, "events", eventId);
 
         try {
-            await runTransaction(database, async (transaction) => {
+            const resultingRegId = await runTransaction(database, async (transaction) => {
                 const eventSnap = await transaction.get(eventRef);
                 if (!eventSnap.exists()) throw "Event does not exist!";
 
@@ -126,9 +140,10 @@ export default function EventDetails() {
                 });
 
                 transaction.update(eventRef, { currentRegNo: next });
-                setRegId(newRegId);
+                return newRegId;
             });
 
+            setRegId(resultingRegId);
             alert("Registration Successful!");
         } catch (error) {
             console.error("Registration failed: ", error);
@@ -179,6 +194,7 @@ export default function EventDetails() {
                     <StatsCard
                         event={event}
                         user={user}
+                        userRole={userRole}
                         regId={regId}
                         processing={processing}
                         onRegister={handleRegister}

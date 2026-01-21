@@ -13,12 +13,12 @@ const DescriptionSection = ({ description, contact1, contact2 }) => {
                 <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {contact1 && (
                         <div className="contact-item">
-                            <span style={{ fontSize: '1.1rem' }}>{contact1}</span>
+                            <span style={{ fontSize: '1.1rem' }}>1. {contact1}</span>
                         </div>
                     )}
                     {contact2 && (
                         <div className="contact-item">
-                            <span style={{ fontSize: '1.1rem' }}>{contact2}</span>
+                            <span style={{ fontSize: '1.1rem' }}>2. {contact2}</span>
                         </div>
                     )}
                 </div>

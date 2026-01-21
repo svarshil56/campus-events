@@ -105,12 +105,25 @@ const Login = () => {
             const user = result.user;
 
             try {
-                // Save/Merge user data to Firestore
-                await setDoc(doc(database, "users", user.uid), {
-                    name: user.displayName,
-                    email: user.email,
-                    lastLogin: new Date()
-                }, { merge: true });
+                // Check if user exists to prevent overwriting roles
+                const userRef = doc(database, "users", user.uid);
+                const userSnap = await import('firebase/firestore').then(mod => mod.getDoc(userRef));
+
+                if (!userSnap.exists()) {
+                    // New User: Create with default 'student' role
+                    await setDoc(userRef, {
+                        name: user.displayName,
+                        email: user.email,
+                        role: 'student',
+                        createdAt: new Date(),
+                        lastLogin: new Date()
+                    });
+                } else {
+                    // Existing User: Just update lastLogin (preserve role!)
+                    await setDoc(userRef, {
+                        lastLogin: new Date()
+                    }, { merge: true });
+                }
             } catch (firestoreError) {
                 console.warn("Could not save user profile to Firestore (likely permissions):", firestoreError);
                 // Proceed anyway as Auth was successful

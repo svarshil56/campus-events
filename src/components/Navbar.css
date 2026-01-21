@@ -113,3 +113,33 @@
     border-color: #FFD700;
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
 }
+
+/* Highlight Button (Get Credits) */
+.nav-highlight-link {
+    color: #FFD700;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.nav-highlight-link:hover,
+.nav-highlight-link.active {
+    color: #b20710;
+}
+
+.nav-highlight-link span {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.nav-highlight-link.active span {
+    color: black;
+}
+
+.nav-highlight-link:hover span {
+    color: white;
+}

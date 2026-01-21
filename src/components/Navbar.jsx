@@ -8,6 +8,9 @@ import aboutSignOutImg from '../assets/signout.png';
 import loginTextImg from '../assets/login_text.png';
 import registerTextImg from '../assets/register_text.png';
 import eventsTextImg from '../assets/Events.png';
+import creditsTextImg from '../assets/getcredits.png';
+import dashboardTextImg from '../assets/dashboard.png';
+import becomeOrganizerTextImg from '../assets/hostevent.png';
 import addEventTextImg from '../assets/AddEvent.png';
 import { auth, database } from '../services/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -18,24 +21,38 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [role, setRole] = useState(null);
+    const [credits, setCredits] = useState(null);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
             if (currentUser) {
-                try {
-                    const userDoc = await getDoc(doc(database, "users", currentUser.uid));
-                    if (userDoc.exists()) {
-                        setRole(userDoc.data().role);
+                // Use onSnapshot for real-time updates
+                const { onSnapshot } = await import('firebase/firestore');
+                const userRef = doc(database, "users", currentUser.uid);
+
+                const unsubscribeSnapshot = onSnapshot(userRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        setRole(data.role);
+                        if (data.role === 'organizer') {
+                            const limit = data.eventLimit || 2;
+                            const created = data.eventsCreated || 0;
+                            setCredits(limit - created);
+                        } else {
+                            setCredits(null);
+                        }
                     }
-                } catch (e) {
-                    console.error("Error fetching role", e);
-                }
+                });
+
+                // Cleanup snapshot listener when auth state changes or component unmounts
+                return () => unsubscribeSnapshot();
             } else {
                 setRole(null);
+                setCredits(null);
             }
         });
-        return () => unsubscribe();
+        return () => unsubscribeAuth();
     }, []);
 
     const handleSignOut = async () => {
@@ -68,8 +85,30 @@ const Navbar = () => {
                     </NavLink>
                 </li>
                 <li><NavLink to="/about"><img src={aboutTextImg} alt="About" className="nav-img-link" /></NavLink></li>
+                {user && role === 'student' && (
+                    <li>
+                        <NavLink to="/become-organizer" className={({ isActive }) => (isActive ? 'nav-text-link active' : 'nav-text-link')}>
+                            <img src={becomeOrganizerTextImg} alt="Become Organizer" className="nav-img-link" />
+                        </NavLink>
+                    </li>
+                )}
                 {user && role === 'organizer' && (
-                    <li><NavLink to="/add-event"><img src={addEventTextImg} alt="Add Event" className="nav-img-link" /></NavLink></li>
+                    <>
+                        <li><NavLink to="/add-event"><img src={addEventTextImg} alt="Add Event" className="nav-img-link" /></NavLink></li>
+                        <li>
+                            <NavLink to="/organizer/request-credits" className={({ isActive }) => (isActive ? 'nav-highlight-link active' : 'nav-highlight-link')}>
+                                <img src={creditsTextImg} alt="Get Credits" className="nav-img-link" />
+                                {credits !== null && <span style={{ marginLeft: '8px', fontWeight: 'bold' }}>({credits} Left)</span>}
+                            </NavLink>
+                        </li>
+                    </>
+                )}
+                {user && role === 'admin' && (
+                    <li>
+                        <NavLink to="/admin/dashboard" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+                            <img src={dashboardTextImg} alt="Dashboard" className="nav-img-link" />
+                        </NavLink>
+                    </li>
                 )}
 
                 {!user && (
