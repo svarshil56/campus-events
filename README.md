@@ -10,7 +10,9 @@ A modern, dynamic web application for managing campus events, verifying registra
 *   **Real-time Updates**: Participant counts and event details update instantly without refreshing the page.
 *   **Secure Authentication**: Robust login and registration system powered by Firebase Auth (Email/Password & Google Sign-In).
 *   **Smart Redirection**: Intelligent routing ensures users return to their intended page after logging in.
-*   **Interactive UI**: distinct "About" and "Contact" sections, glassmorphism effects, and responsive design.
+*   **My Events & Digital Tickets**: Students can view their registered events as stylized, perforated digital tickets.
+*   **Role-Based Access Control**: Distinct features and navigation for Students versus Organizers.
+*   **Interactive UI**: Distinct "About" and "Contact" sections, glassmorphism effects, and responsive design.
 
 ## 🛠️ Tech Stack
 
@@ -25,6 +27,9 @@ A modern, dynamic web application for managing campus events, verifying registra
 | Event Details | Login Screen |
 |:---:|:---:|
 | ![alt text](image-1.png) | ![alt text](image-2.png) |
+| My Events | Digital Ticket |
+|:---:|:---:|
+| ![alt text](image-3.png) | ![alt text](image-4.png) |
 
 ## ⚙️ Installation & Setup
 
