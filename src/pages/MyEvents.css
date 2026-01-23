@@ -1,0 +1,288 @@
+/* MyEvents.css */
+
+.my-events-container {
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    /* Deep dark background handled by global or parent, but ensuring here */
+}
+
+/* --- Layout --- */
+
+.my-events-section {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    padding-bottom: 6rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.my-events-content-wrapper {
+    max-width: 60rem;
+    /* Reduced width for ticket stack list look */
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- Header --- */
+
+.my-events-header-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding-bottom: 2rem;
+}
+
+.my-events-header-text {
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 300;
+    font-size: 1.125rem;
+    letter-spacing: 0.05em;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+
+.my-events-header-image {
+    width: auto;
+    height: 169.75px;
+    max-width: 56rem;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3));
+    margin: 0 0 16px 0;
+}
+
+/* --- TICKET UI STYLES --- */
+
+.my-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+.ticket-card {
+    display: flex;
+    flex-direction: row;
+    /* Horizontal layout */
+    background: rgba(10, 10, 10, 0.6);
+    /* Glass dark */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    min-height: 180px;
+}
+
+.ticket-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: rgba(255, 0, 50, 0.5);
+    /* Stranger Things Red Glow */
+    box-shadow: 0 0 20px rgba(255, 0, 50, 0.2), inset 0 0 20px rgba(255, 0, 50, 0.1);
+}
+
+/* --- Left Side: Info --- */
+.ticket-left {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: none;
+}
+
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.ticket-tag {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #FFD700;
+    /* Gold */
+    background: rgba(255, 215, 0, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.ticket-id {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.1em;
+}
+
+.ticket-title {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    color: white;
+    margin: 0.5rem 0;
+    line-height: 1.1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.ticket-meta {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.meta-label {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 2px;
+}
+
+.meta-value {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+}
+
+/* --- Divider: Perforation --- */
+.ticket-divider {
+    position: relative;
+    width: 2px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashed-line {
+    width: 0px;
+    height: 100%;
+    border-left: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+.notch-top,
+.notch-bottom {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #000;
+    /* Matches main bg color to look like a hole */
+    border-radius: 50%;
+    left: -10px;
+    z-index: 2;
+}
+
+.notch-top {
+    top: -10px;
+}
+
+.notch-bottom {
+    bottom: -10px;
+}
+
+/* --- Right Side: Action --- */
+.ticket-right {
+    width: 180px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ticket-barcode {
+    height: 40px;
+    width: 100%;
+    background: repeating-linear-gradient(90deg,
+            rgba(255, 255, 255, 0.5) 0px,
+            rgba(255, 255, 255, 0.5) 2px,
+            transparent 2px,
+            transparent 4px,
+            rgba(255, 255, 255, 0.5) 4px,
+            rgba(255, 255, 255, 0.5) 8px,
+            transparent 8px,
+            transparent 9px);
+    opacity: 0.3;
+    margin-bottom: 1.5rem;
+}
+
+.ticket-button {
+    width: 100%;
+    padding: 0.75rem;
+    background: transparent;
+    color: #FFD700;
+    border: 1px solid #FFD700;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.ticket-button:hover {
+    background: #FFD700;
+    color: black;
+    box-shadow: 0 0 15px #FFD700;
+}
+
+/* --- Mobile Stack --- */
+@media (max-width: 768px) {
+    .ticket-card {
+        flex-direction: column;
+    }
+
+    .ticket-right {
+        width: 100%;
+        padding: 1rem;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .ticket-barcode {
+        width: 60px;
+        height: 30px;
+        margin-bottom: 0;
+    }
+
+    .ticket-divider {
+        display: none;
+        /* Hide perforation on mobile for simplicity */
+    }
+
+    .ticket-button {
+        width: auto;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .ticket-title {
+        font-size: 1.5rem;
+    }
+}

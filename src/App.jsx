@@ -10,6 +10,7 @@ import AdminRequests from './pages/admin/AdminRequests';
 import AdminDashboard from './pages/admin/AdminDashboard'; // Import Dashboard
 import OrganizerRequest from './pages/organizer-request/OrganizerRequest';
 import OrganizerEventForm from './pages/organizer/OrganizerEventForm';
+import MyEvents from './pages/MyEvents';
 import ProtectedRoutes from './components/ProtectedRoutes'; // Import the new component
 
 import { SpeedInsights } from "@vercel/speed-insights/react"
@@ -27,6 +28,7 @@ function App() {
 
                 <Route element={<ProtectedRoutes roleRequired="student" />}>
                     <Route path="/become-organizer" element={<OrganizerRequest />} />
+                    <Route path="/my-events" element={<MyEvents />} />
                 </Route>
 
                 <Route element={<ProtectedRoutes roleRequired="organizer" />}>

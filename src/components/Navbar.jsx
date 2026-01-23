@@ -11,6 +11,7 @@ import eventsTextImg from '../assets/Events.png';
 import creditsTextImg from '../assets/getcredits.png';
 import dashboardTextImg from '../assets/dashboard.png';
 import becomeOrganizerTextImg from '../assets/hostevent.png';
+import myEventsTextImg from '../assets/myeve.png';
 import addEventTextImg from '../assets/AddEvent.png';
 import { auth, database } from '../services/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -86,11 +87,18 @@ const Navbar = () => {
                 </li>
                 <li><NavLink to="/about"><img src={aboutTextImg} alt="About" className="nav-img-link" /></NavLink></li>
                 {user && role === 'student' && (
-                    <li>
-                        <NavLink to="/become-organizer" className={({ isActive }) => (isActive ? 'nav-text-link active' : 'nav-text-link')}>
-                            <img src={becomeOrganizerTextImg} alt="Become Organizer" className="nav-img-link" />
-                        </NavLink>
-                    </li>
+                    <>
+                        <li>
+                            <NavLink to="/become-organizer" className={({ isActive }) => (isActive ? 'nav-text-link active' : 'nav-text-link')}>
+                                <img src={becomeOrganizerTextImg} alt="Become Organizer" className="nav-img-link" />
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/my-events" className={({ isActive }) => (isActive ? 'nav-text-link active' : 'nav-text-link')}>
+                                <img src={myEventsTextImg} alt="My Events" className="nav-img-link" />
+                            </NavLink>
+                        </li>
+                    </>
                 )}
                 {user && role === 'organizer' && (
                     <>
