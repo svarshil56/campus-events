@@ -7,17 +7,23 @@ A modern, dynamic web application for managing campus events, verifying registra
 ## 🚀 Key Features
 
 *   **Dynamic Event Management**: Administrators (and authenticated users) can effortlessly add new events with custom details.
+*   **Role-Based Access Control (RBAC)**: Distinct capabilities for Admins, Organizers, and Students.
+    *   **Admins**: Full control over users and events, with a dedicated Dashboard and User Management system.
+    *   **Organizers**: Create and manage their own events, view participant lists, and export data.
+    *   **Students**: Browse events, register, and view digital tickets.
+*   **Excel Export**: Organizers and Admins can export registration data to Excel (`.xlsx`) for easy management.
 *   **Real-time Updates**: Participant counts and event details update instantly without refreshing the page.
-*   **Secure Authentication**: Robust login and registration system powered by Firebase Auth (Email/Password & Google Sign-In).
-*   **Smart Redirection**: Intelligent routing ensures users return to their intended page after logging in.
+*   **Secure Authentication**: Robust login and registration system powered by Firebase Auth.
 *   **My Events & Digital Tickets**: Students can view their registered events as stylized, perforated digital tickets.
-*   **Role-Based Access Control**: Distinct features and navigation for Students versus Organizers.
-*   **Interactive UI**: Distinct "About" and "Contact" sections, glassmorphism effects, and responsive design.
+*   **Premium UI/UX**: "Stranger Things" inspired aesthetic with glassmorphism, Cinzel typography, and gold/red accents.
 
 ## 🛠️ Tech Stack
 
 *   **Frontend**: React, Vite
-*   **Styling**: CSS3 (Custom Glassmorphism Design)
+*   **Styling**: CSS3 (Glassmorphism, Responsive)
+*   **Backend**: Firebase (Firestore, Authentication)
+*   **Utilities**: `xlsx` (Excel Export), `recharts` (Data Visualization)
+*   **Routing**: React Router Dom
 *   **Backend**: Firebase (Firestore, Authentication)
 *   **Routing**: React Router Dom
 
