@@ -17,11 +17,13 @@ import MyEvents from './pages/MyEvents';
 import ProtectedRoutes from './components/ProtectedRoutes'; // Import the new component
 
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
     return (
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <SpeedInsights />
+            <Analytics />
             <Routes>
                 <Route path="/" element={<Navigate to="/home" replace />} />
                 <Route path="/home" element={<LandingPage />} />
