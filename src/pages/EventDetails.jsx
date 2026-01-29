@@ -113,7 +113,8 @@ export default function EventDetails() {
                 const eventSnap = await transaction.get(eventRef);
                 if (!eventSnap.exists()) throw "Event does not exist!";
 
-                const current = eventSnap.data().currentRegNo || 0;
+                const eventData = eventSnap.data();
+                const current = eventData.currentRegNo || 0;
                 const next = current + 1;
 
                 // Format: eventname_reg_0XX
@@ -136,6 +137,8 @@ export default function EventDetails() {
                     studentId,
                     paid: false,
                     verified: false,
+                    organizerId: eventData.organizerId, // Save for easier querying/rules
+                    eventTitle: eventData.title, // Save for redundancy
                     createdAt: serverTimestamp(),
                 });
 

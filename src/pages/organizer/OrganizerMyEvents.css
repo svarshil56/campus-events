@@ -1,0 +1,230 @@
+/* OrganizerMyEvents.css */
+
+.organizer-events-container {
+    min-height: 100vh;
+    background: #000;
+    color: #fff;
+    padding-top: 100px;
+    /* Navbar height + spacing */
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Reusing global backgrounds or add if necessary */
+
+.content-wrapper {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-title {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    /* Subtle red glow */
+}
+
+/* Back Button */
+.back-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0;
+    width: fit-content;
+    /* Ensure clickable area is minimal */
+    align-self: flex-start;
+    /* Left align in flex column */
+    transition: all 0.3s;
+}
+
+.back-btn:hover {
+    color: #FFD700;
+    transform: translateX(-5px);
+}
+
+.events-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Event Card - Mimicking MyEvents Ticket Style */
+.org-event-card {
+    display: flex;
+    flex-direction: row;
+    background: rgba(10, 10, 10, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s ease;
+    min-height: 150px;
+}
+
+.org-event-card:hover {
+    transform: translateY(-5px) scale(1.01);
+    border-color: rgba(255, 0, 50, 0.5);
+    box-shadow: 0 0 20px rgba(255, 0, 50, 0.2);
+}
+
+.event-info {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.event-info h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    color: white;
+    margin: 0 0 0.5rem 0;
+}
+
+.event-date {
+    font-family: 'Poppins', sans-serif;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+}
+
+.event-stats {
+    font-family: 'Poppins', sans-serif;
+    color: #FFD700;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.event-actions {
+    width: 200px;
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.action-btn {
+    padding: 0.75rem;
+    border: 1px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.3s;
+    background: transparent;
+    text-align: center;
+}
+
+.view-regs-btn {
+    border-color: #FFD700;
+    color: #FFD700;
+}
+
+.view-regs-btn:hover {
+    background: #FFD700;
+    color: black;
+    box-shadow: 0 0 10px #FFD700;
+}
+
+.delete-event-btn {
+    border-color: #ff4444;
+    color: #ff4444;
+}
+
+.delete-event-btn:hover {
+    background: #ff4444;
+    color: white;
+    box-shadow: 0 0 10px #ff4444;
+}
+
+.create-btn {
+    padding: 10px 20px;
+    background: #FFD700;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.3s;
+}
+
+.create-btn:hover {
+    box-shadow: 0 0 15px #FFD700;
+}
+
+/* Table Styles for Registrations Page */
+.users-table-container {
+    background: rgba(10, 10, 10, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #eee;
+}
+
+.users-table th {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+    color: #FFD700;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.1em;
+}
+
+.users-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: 'Poppins', sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.users-table tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .org-event-card {
+        flex-direction: column;
+    }
+
+    .event-actions {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        flex-direction: row;
+    }
+}
