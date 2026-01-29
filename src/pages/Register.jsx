@@ -5,36 +5,18 @@ import registerimg from '../assets/registerimg.png';
 import { auth, googleProvider, database } from '../services/firebase';
 import { createUserWithEmailAndPassword, signInWithPopup, updateProfile, signOut } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { useNavigate } from 'react-router-dom';
+import { usePageTransition } from '../transition/usePageTransition';
+import { useUnicornScript } from '../hooks/useUnicornScript';
 
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
+    const navigateWithTransition = usePageTransition(); // Updated hook
 
-    // Reuse Unicorn Script for background consistency
-    useEffect(() => {
-        const src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.1/dist/unicornStudio.umd.js";
-
-        const initUnicorn = () => {
-            if (window.UnicornStudio) {
-                window.UnicornStudio.init();
-            }
-        };
-
-        let script = document.querySelector(`script[src="${src}"]`);
-
-        if (!script) {
-            script = document.createElement("script");
-            script.src = src;
-            script.onload = initUnicorn;
-            document.body.appendChild(script);
-        } else {
-            setTimeout(initUnicorn, 100);
-        }
-    }, []);
+    // Initialize Unicorn Studio background
+    useUnicornScript();
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -55,7 +37,7 @@ const Register = () => {
             });
 
             await signOut(auth); // Force sign out so they have to login
-            navigate('/login');
+            navigateWithTransition('/login', { transitionText: "INITIALIZING SUBJECT" });
         } catch (err) {
             setError(err.message);
         }
@@ -87,7 +69,7 @@ const Register = () => {
                 }, { merge: true });
             }
 
-            navigate('/home');
+            navigateWithTransition('/home');
         } catch (err) {
             setError(err.message);
         }

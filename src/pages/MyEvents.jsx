@@ -73,11 +73,8 @@ const MyEvents = () => {
         }
     }, [user, loadingUser, navigate]);
 
-    if (loading || loadingUser) return (
-        <div className="landing-container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <h2 style={{ color: 'white' }}>Loading your events...</h2>
-        </div>
-    );
+    // Loading state covered by global transition
+    if (loading || loadingUser) return <div className="landing-container" style={{ minHeight: '100vh', background: '#000' }}></div>;
 
     return (
         <div className="landing-container" style={{ minHeight: '100vh', background: '#000' }}>

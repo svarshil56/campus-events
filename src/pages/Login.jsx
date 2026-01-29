@@ -6,39 +6,19 @@ import { auth, googleProvider, database } from '../services/firebase';
 import { signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate, useLocation } from 'react-router-dom';
+import { usePageTransition } from '../transition/usePageTransition';
+import { useUnicornScript } from '../hooks/useUnicornScript';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [message, setMessage] = useState(''); // For success messages
+    const navigateWithTransition = usePageTransition();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const scriptId = 'unicorn-studio-script';
-        const src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.1/dist/unicornStudio.umd.js";
-
-        // Helper to init
-        const initUnicorn = () => {
-            if (window.UnicornStudio) {
-                window.UnicornStudio.init();
-            }
-        };
-
-        // Check if script exists
-        let script = document.querySelector(`script[src="${src}"]`);
-
-        if (!script) {
-            script = document.createElement("script");
-            script.src = src;
-            script.onload = initUnicorn;
-            document.body.appendChild(script);
-        } else {
-            // Script already exists, try to init immediately
-            // (Use timeout to ensure DOM is ready or let stack clear)
-            setTimeout(initUnicorn, 100);
-        }
-    }, []);
+    // Initialize Unicorn Studio background
+    useUnicornScript();
 
     const location = useLocation();
     const from = location.state?.from?.pathname || '/home';
@@ -46,6 +26,8 @@ const Login = () => {
     useEffect(() => {
         // Redirect if already logged in
         if (auth.currentUser) {
+            // Instant redirect, no transition needed or maybe just standard?
+            // If user goes to /login while logged in, just bounce them back.
             navigate(from, { replace: true });
         }
     }, [navigate, from]);
@@ -56,12 +38,10 @@ const Login = () => {
         setMessage('');
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            navigate(from, { replace: true });
+            navigateWithTransition(from, { replace: true, transitionText: "ACCESS GRANTED" });
         } catch (err) {
             console.error("Login Error:", err.code, err.message);
-            // Custom Error Messaging
             if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-                // Note: 'auth/invalid-credential' is often returned for both in newer SDKs for security
                 setError('Incorrect password or email.');
             } else if (err.code === 'auth/user-not-found') {
                 setError('No user found with this email. Please register first.');
@@ -77,23 +57,14 @@ const Login = () => {
 
     const handleForgotPassword = async () => {
         if (!email) {
-            setError('Please enter your email address to reset password.');
+            setError('Please enter your email first.');
             return;
         }
-        setError('');
-        setMessage('');
         try {
             await sendPasswordResetEmail(auth, email);
             setMessage('Password reset email sent! Check your inbox.');
         } catch (err) {
-            console.error("Reset Password Error:", err.code, err.message);
-            if (err.code === 'auth/user-not-found') {
-                setError('No account found with this email.');
-            } else if (err.code === 'auth/invalid-email') {
-                setError('Invalid email format.');
-            } else {
-                setError('Failed to send reset email. Try again.');
-            }
+            setError(err.message);
         }
     };
 
@@ -110,7 +81,7 @@ const Login = () => {
                 const userSnap = await import('firebase/firestore').then(mod => mod.getDoc(userRef));
 
                 if (!userSnap.exists()) {
-                    // New User: Create with default 'student' role
+                    // New User
                     await setDoc(userRef, {
                         name: user.displayName,
                         email: user.email,
@@ -119,17 +90,16 @@ const Login = () => {
                         lastLogin: new Date()
                     });
                 } else {
-                    // Existing User: Just update lastLogin (preserve role!)
+                    // Existing User
                     await setDoc(userRef, {
                         lastLogin: new Date()
                     }, { merge: true });
                 }
             } catch (firestoreError) {
-                console.warn("Could not save user profile to Firestore (likely permissions):", firestoreError);
-                // Proceed anyway as Auth was successful
+                console.warn("Could not save user profile to Firestore:", firestoreError);
             }
 
-            navigate(from, { replace: true });
+            navigateWithTransition(from, { replace: true, transitionText: "ACCESS GRANTED" });
         } catch (err) {
             setError(err.message);
         }

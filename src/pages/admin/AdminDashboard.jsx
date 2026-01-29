@@ -154,13 +154,23 @@ const AdminDashboard = () => {
 
 
                 {loading ? (
-                    <div className="dashboard-loading">Accessing Mainframe...</div>
+                    // Visual covered by global transition
+                    <div style={{ minHeight: '50vh' }}></div>
                 ) : (
                     <>
                         {/* Key Metrics Cards */}
                         <div className="stats-grid">
-                            <div className="stat-card">
-                                <div className="stat-label">Total Users</div>
+                            <div
+                                className="stat-card"
+                                style={{
+                                    borderColor: stats.pendingRequests > 0 ? '#FF0000' : '',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => navigate('/admin/users')}
+                            >
+                                <div className="stat-label" style={{ color: stats.pendingRequests > 0 ? '#FF3333' : '' }}>
+                                    Total Users
+                                </div>
                                 <div className="stat-value">{stats.users}</div>
                             </div>
                             <div className="stat-card">
@@ -177,21 +187,6 @@ const AdminDashboard = () => {
                             >
                                 <div className="stat-label" style={{ color: stats.pendingRequests > 0 ? '#FF3333' : '' }}>
                                     Pending Requests
-                                </div>
-                                <div className="stat-value" style={{ color: stats.pendingRequests > 0 ? '#FF3333' : '' }}>
-                                    {stats.pendingRequests}
-                                </div>
-                            </div>
-                            <div
-                                className="stat-card"
-                                style={{
-                                    borderColor: stats.pendingRequests > 0 ? '#FF0000' : '',
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => navigate('/admin/users')}
-                            >
-                                <div className="stat-label" style={{ color: stats.pendingRequests > 0 ? '#FF3333' : '' }}>
-                                    Manage Users
                                 </div>
                                 <div className="stat-value" style={{ color: stats.pendingRequests > 0 ? '#FF3333' : '' }}>
                                     {stats.pendingRequests}

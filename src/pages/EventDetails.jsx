@@ -167,7 +167,6 @@ export default function EventDetails() {
     if (loading || !event)
         return (
             <div className="event-details-container">
-                <h2>Loading...</h2>
             </div>
         );
 
