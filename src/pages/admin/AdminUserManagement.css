@@ -1,0 +1,142 @@
+/* AdminUserManagement.css */
+
+.admin-users-container {
+    min-height: 100vh;
+    background-color: #000;
+    color: #fff;
+    padding-top: 100px;
+}
+
+.admin-content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.admin-heading {
+    font-family: 'Cinzel', serif;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+}
+
+.users-table-container {
+    overflow-x: auto;
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #eee;
+}
+
+.users-table th {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+    color: #FFD700;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 1px;
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+
+.users-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: 'Poppins', sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.users-table tr:hover td {
+    background: rgba(255, 215, 0, 0.05);
+    color: #fff;
+}
+
+/* Role Badges */
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+}
+
+.role-badge.admin {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff4444;
+    border: 1px solid #ff4444;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
+}
+
+.role-badge.organizer {
+    background: rgba(255, 215, 0, 0.1);
+    color: #FFD700;
+    border: 1px solid #FFD700;
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+}
+
+.role-badge.student {
+    background: rgba(255, 255, 255, 0.05);
+    color: #4caf50;
+    border: 1px solid #4caf50;
+}
+
+/* Action Buttons */
+.delete-btn {
+    background: transparent;
+    border: 1px solid #ff4444;
+    color: #ff4444;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover:not(:disabled) {
+    background: #ff4444;
+    color: white;
+    box-shadow: 0 0 10px rgba(255, 68, 68, 0.4);
+}
+
+.delete-btn:disabled {
+    border-color: #333;
+    color: #444;
+    cursor: not-allowed;
+}
+
+.loading-text {
+    text-align: center;
+    color: #888;
+    font-size: 1.2rem;
+    margin-top: 3rem;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
+}

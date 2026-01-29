@@ -4,6 +4,7 @@ import { collection, getDocs, query, where, onSnapshot } from 'firebase/firestor
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import Navbar from '../../components/Navbar';
 import { useNavigate } from 'react-router-dom';
+import { exportToExcel } from '../../utils/excelExport';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -16,6 +17,7 @@ const AdminDashboard = () => {
     });
     const [graphData, setGraphData] = useState([]);
     const [eventPopularity, setEventPopularity] = useState([]);
+    const [lastEvents, setLastEvents] = useState([]); // Store actual event objects for list
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -31,16 +33,20 @@ const AdminDashboard = () => {
 
                 let totalReg = 0;
                 const popularityData = [];
+                const allEvents = [];
 
                 eventsSnap.docs.forEach(doc => {
                     const data = doc.data();
                     const regCount = data.currentRegNo || 0;
                     totalReg += regCount;
                     popularityData.push({
-                        name: data.title, // or truncate if too long
+                        name: data.title,
                         registrations: regCount
                     });
+                    allEvents.push({ id: doc.id, ...data });
                 });
+
+                setLastEvents(allEvents);
 
                 // Sort for Top 5 Events
                 popularityData.sort((a, b) => b.registrations - a.registrations);
@@ -64,8 +70,7 @@ const AdminDashboard = () => {
                     totalRegistrations: totalReg
                 }));
 
-                // 4. Mock Activity Data (Since we don't track historical registration dates in a simple way yet)
-                // In production, you'd aggregate this from 'createdAt' timestamps in registration subcollections
+                // 4. Mock Activity Data
                 const activityMock = [
                     { name: 'Mon', active: 10 },
                     { name: 'Tue', active: 25 },
@@ -88,6 +93,30 @@ const AdminDashboard = () => {
 
         fetchData();
     }, []);
+
+    const handleExportRegistrations = async (eventId, eventTitle) => {
+        try {
+            const regsSnap = await getDocs(collection(database, "events", eventId, "registrations"));
+            if (regsSnap.empty) {
+                alert("No registrations found for this event.");
+                return;
+            }
+
+            const data = regsSnap.docs.map(doc => {
+                const d = doc.data();
+                return {
+                    "Registration ID": d.regId || doc.id,
+                    "Name": d.name || "N/A",
+                    "Email": d.email || "N/A"
+                };
+            });
+
+            exportToExcel(data, `${eventTitle}_Registrations`);
+        } catch (error) {
+            console.error("Error exporting:", error);
+            alert("Failed to export registrations.");
+        }
+    };
 
     // Custom Tooltip for Charts
     const CustomTooltip = ({ active, payload, label }) => {
@@ -123,6 +152,7 @@ const AdminDashboard = () => {
                     <div className="dashboard-badge">Live Updates</div>
                 </header>
 
+
                 {loading ? (
                     <div className="dashboard-loading">Accessing Mainframe...</div>
                 ) : (
@@ -132,17 +162,10 @@ const AdminDashboard = () => {
                             <div className="stat-card">
                                 <div className="stat-label">Total Users</div>
                                 <div className="stat-value">{stats.users}</div>
-                                <div className="stat-icon-bg">👥</div>
                             </div>
                             <div className="stat-card">
                                 <div className="stat-label">Total Events</div>
                                 <div className="stat-value">{stats.events}</div>
-                                <div className="stat-icon-bg">📅</div>
-                            </div>
-                            <div className="stat-card">
-                                <div className="stat-label">Total Registrations</div>
-                                <div className="stat-value">{stats.totalRegistrations}</div>
-                                <div className="stat-icon-bg">🎟️</div>
                             </div>
                             <div
                                 className="stat-card"
@@ -158,7 +181,21 @@ const AdminDashboard = () => {
                                 <div className="stat-value" style={{ color: stats.pendingRequests > 0 ? '#FF3333' : '' }}>
                                     {stats.pendingRequests}
                                 </div>
-                                <div className="stat-icon-bg">🔔</div>
+                            </div>
+                            <div
+                                className="stat-card"
+                                style={{
+                                    borderColor: stats.pendingRequests > 0 ? '#FF0000' : '',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => navigate('/admin/users')}
+                            >
+                                <div className="stat-label" style={{ color: stats.pendingRequests > 0 ? '#FF3333' : '' }}>
+                                    Manage Users
+                                </div>
+                                <div className="stat-value" style={{ color: stats.pendingRequests > 0 ? '#FF3333' : '' }}>
+                                    {stats.pendingRequests}
+                                </div>
                             </div>
                         </div>
 
@@ -212,6 +249,42 @@ const AdminDashboard = () => {
                                         </Bar>
                                     </BarChart>
                                 </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                        {/* All Events List for Admin */}
+                        <div className="chart-card" style={{ marginTop: '20px' }}>
+                            <div className="chart-header">
+                                <div className="chart-title">All Events Management</div>
+                            </div>
+                            <div className="table-wrapper">
+                                <table className="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Event Name</th>
+                                            <th>Date</th>
+                                            <th>Registrations</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {lastEvents.map(event => (
+                                            <tr key={event.id}>
+                                                <td>{event.title}</td>
+                                                <td>{event.date}</td>
+                                                <td style={{ textAlign: 'center' }}>{event.currentRegNo || 0}</td>
+                                                <td>
+                                                    <button
+                                                        className="action-btn-small export-btn"
+                                                        onClick={() => handleExportRegistrations(event.id, event.title)}
+                                                    >
+                                                        Details (Excel)
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </>
