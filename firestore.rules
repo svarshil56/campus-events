@@ -35,8 +35,21 @@ service cloud.firestore {
       // Event Registrations
       match /registrations/{regId} {
         allow create: if request.auth != null;
-        allow read: if request.auth != null && (
-          resource.data.uid == request.auth.uid || resource.data.organizerId == request.auth.uid || isAdmin()
+        
+        // Split into get (single doc) and list (collection query)
+        allow get: if request.auth != null && (
+          resource.data.uid == request.auth.uid || 
+          resource.data.organizerId == request.auth.uid || 
+          get(/databases/$(database)/documents/events/$(eventId)).data.organizerId == request.auth.uid ||
+          isAdmin()
+        );
+
+        allow list: if request.auth != null && (
+          // For listing, we relies on parent permission or admin, 
+          // NOT resource.data.uid (unless query filters by it, but we simplify here)
+          resource.data.organizerId == request.auth.uid || 
+          get(/databases/$(database)/documents/events/$(eventId)).data.organizerId == request.auth.uid ||
+          isAdmin()
         );
       }
     }

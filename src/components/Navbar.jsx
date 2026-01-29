@@ -104,6 +104,11 @@ const Navbar = () => {
                     <>
                         <li><NavLink to="/add-event"><img src={addEventTextImg} alt="Add Event" className="nav-img-link" /></NavLink></li>
                         <li>
+                            <NavLink to="/organizer/my-events" className={({ isActive }) => (isActive ? 'nav-text-link active' : 'nav-text-link')}>
+                                <img src={myEventsTextImg} alt="My Events" className="nav-img-link" />
+                            </NavLink>
+                        </li>
+                        <li>
                             <NavLink to="/organizer/request-credits" className={({ isActive }) => (isActive ? 'nav-highlight-link active' : 'nav-highlight-link')}>
                                 <img src={creditsTextImg} alt="Get Credits" className="nav-img-link" />
                                 {credits !== null && <span style={{ marginLeft: '8px', fontWeight: 'bold' }}>({credits} Left)</span>}
