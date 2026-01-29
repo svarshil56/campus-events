@@ -8,8 +8,11 @@ import EventDetails from './pages/EventDetails';
 
 import AdminRequests from './pages/admin/AdminRequests';
 import AdminDashboard from './pages/admin/AdminDashboard'; // Import Dashboard
+import AdminUserManagement from './pages/admin/AdminUserManagement';
 import OrganizerRequest from './pages/organizer-request/OrganizerRequest';
 import OrganizerEventForm from './pages/organizer/OrganizerEventForm';
+import OrganizerMyEvents from './pages/organizer/OrganizerMyEvents';
+import EventRegistrations from './pages/organizer/EventRegistrations';
 import MyEvents from './pages/MyEvents';
 import ProtectedRoutes from './components/ProtectedRoutes'; // Import the new component
 
@@ -35,12 +38,15 @@ function App() {
                     {/* Protected routes can be added here in future */}
                     <Route path="/add-event" element={<OrganizerEventForm />} />
                     <Route path="/organizer/request-credits" element={<OrganizerRequest />} />
+                    <Route path="/organizer/my-events" element={<OrganizerMyEvents />} />
+                    <Route path="/organizer/event/:eventId/registrations" element={<EventRegistrations />} />
                 </Route>
 
                 <Route element={<ProtectedRoutes roleRequired="admin" />}>
                     {/* Dashboard is the new main entry for admins */}
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/admin/requests" element={<AdminRequests />} />
+                    <Route path="/admin/users" element={<AdminUserManagement />} />
                 </Route>
 
                 <Route path="/events/:eventId" element={<EventDetails />} />
