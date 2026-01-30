@@ -3,7 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './services/firebase';
 import { TransitionProvider, useTransitionContext } from './transition/TransitionContext';
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
+import GlobalScrollbar from './components/GlobalScrollbar';
+import PageTransition from './transition/PageTransition';
 
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
@@ -22,20 +25,8 @@ import EventRegistrations from './pages/organizer/EventRegistrations';
 import MyEvents from './pages/MyEvents';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import PublicRoute from './components/PublicRoute';
-import PageTransition from './transition/PageTransition';
 
-import { SpeedInsights } from "@vercel/speed-insights/react"
-
-// Wrapper to handle route changes
 const AppContent = ({ user, loadingAuth }) => {
-    // We can use the context here if we want to trigger initial load animation
-    // But PageTransition is inside the Provider, so we need to be careful.
-    // Actually, AppContent IS inside the Router, but we need TransitionProvider INSIDE Router?
-    // Or outside? Context usually outside everything or inside Router if it uses navigation?
-    // usePageTransition uses useNavigate, so TransitionProvider must be inside Router.
-    // But AppContent is inside Router.
-    // So we can wrap the return of AppContent or wrap AppContent in App.
-    // Let's look at App function.
     return (
         <TransitionProvider>
             <InnerAppContent user={user} loadingAuth={loadingAuth} />
@@ -50,7 +41,6 @@ const InnerAppContent = ({ user, loadingAuth }) => {
     // Handle Global Auth Loading (Initial Load)
     useEffect(() => {
         if (loadingAuth) {
-            // Initial load
             startTransition([
                 "ENTERING THE UPSIDE DOWN",
                 "CONNECTING TO HAWKINS LAB",
@@ -61,21 +51,14 @@ const InnerAppContent = ({ user, loadingAuth }) => {
         }
     }, [loadingAuth]);
 
-    // We no longer trigger transition on location change because we want manual control.
-    // But for browser back/forward, we might want a fallback?
-    // For now, adhere to "Navigation should be controlled manually".
-    // Browser back button will just change route.
-    // If we strictly want animation on back button, we'd need useLocation check
-    // but that flags AFTER route change.
-    // Let's stick to manual for now.
-
-    // Prevent rendering main app until initial auth check is done (to stop redirects)
+    // Prevent rendering main app until initial auth check is done
     if (loadingAuth) {
         return <PageTransition />;
     }
 
     return (
         <>
+            <GlobalScrollbar isLoading={isTransitioning} />
             <PageTransition />
             <Routes>
                 <Route path="/" element={<Navigate to="/home" replace />} />

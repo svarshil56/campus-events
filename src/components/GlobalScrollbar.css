@@ -1,0 +1,33 @@
+/* Shared Scroll Progress Indicator Styles */
+.scroll-progress-container {
+    position: fixed;
+    top: 50%;
+    right: 50px;
+    transform: translateY(-50%);
+    width: 10px;
+    /* Matching latest edit */
+    height: 300px;
+    /* Matching latest edit */
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 9990;
+    /* Below Transition Overlay */
+    overflow: hidden;
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.scroll-progress-container.visible {
+    opacity: 1;
+}
+
+.scroll-progress-fill {
+    width: 100%;
+    background-color: #FFD700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+    border-radius: 20px;
+    transition: height 0.1s ease-out;
+}
