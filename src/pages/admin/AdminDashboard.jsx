@@ -37,7 +37,7 @@ const AdminDashboard = () => {
 
                 eventsSnap.docs.forEach(doc => {
                     const data = doc.data();
-                    const regCount = data.currentRegNo || 0;
+                    const regCount = Number(data.currentRegNo) || 0;
                     totalReg += regCount;
                     popularityData.push({
                         name: data.title,
@@ -118,6 +118,8 @@ const AdminDashboard = () => {
         }
     };
 
+
+
     // Custom Tooltip for Charts
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
@@ -173,7 +175,11 @@ const AdminDashboard = () => {
                                 </div>
                                 <div className="stat-value">{stats.users}</div>
                             </div>
-                            <div className="stat-card">
+                            <div
+                                className="stat-card"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => navigate('/admin/events')}
+                            >
                                 <div className="stat-label">Total Events</div>
                                 <div className="stat-value">{stats.events}</div>
                             </div>
@@ -251,6 +257,7 @@ const AdminDashboard = () => {
                         <div className="chart-card" style={{ marginTop: '20px' }}>
                             <div className="chart-header">
                                 <div className="chart-title">All Events Management</div>
+
                             </div>
                             <div className="table-wrapper">
                                 <table className="admin-table">

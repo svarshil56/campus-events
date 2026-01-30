@@ -29,7 +29,7 @@ service cloud.firestore {
       );
       
       allow delete: if request.auth != null && (
-        resource.data.organizerId == request.auth.uid || isAdmin()
+        isAdmin() || (resource != null && resource.data.organizerId == request.auth.uid)
       );
 
       // Event Registrations
@@ -51,6 +51,8 @@ service cloud.firestore {
           get(/databases/$(database)/documents/events/$(eventId)).data.organizerId == request.auth.uid ||
           isAdmin()
         );
+
+        allow delete: if request.auth != null && isAdmin();
       }
     }
 
@@ -62,7 +64,7 @@ service cloud.firestore {
     }
     // 5. COLLECTION GROUP QUERIES
     match /{path=**}/registrations/{regId} {
-      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow read: if request.auth != null && (resource.data.uid == request.auth.uid || isAdmin());
     }
   }
 }

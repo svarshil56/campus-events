@@ -114,7 +114,7 @@ export default function EventDetails() {
                 if (!eventSnap.exists()) throw "Event does not exist!";
 
                 const eventData = eventSnap.data();
-                const current = eventData.currentRegNo || 0;
+                const current = Number(eventData.currentRegNo) || 0;
                 const next = current + 1;
 
                 // Format: eventname_reg_0XX

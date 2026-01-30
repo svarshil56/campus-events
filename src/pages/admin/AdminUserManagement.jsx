@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { database } from '../../services/firebase';
-import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, deleteDoc, query, where, writeBatch } from 'firebase/firestore';
 import './AdminUserManagement.css';
 
 const AdminUserManagement = () => {
@@ -30,17 +30,49 @@ const AdminUserManagement = () => {
     };
 
     const handleDeleteUser = async (userId, userName) => {
-        if (!window.confirm(`Are you sure you want to delete user "${userName}"? This cannot be undone.`)) {
+        if (!window.confirm(`Are you sure you want to delete user "${userName}"? This cannot be undone. All their events will also be deleted.`)) {
             return;
         }
 
         try {
+            // 1. Delete associated events first
+            const q = query(collection(database, "events"), where("organizerId", "==", userId));
+            const querySnapshot = await getDocs(q);
+
+            const deleteOps = [];
+
+            // Gather all items to delete (Events + their Registrations)
+            for (const eventDoc of querySnapshot.docs) {
+                // a. Delete the event itself
+                deleteOps.push(eventDoc.ref);
+
+                // b. Delete its registrations (subcollection)
+                const registrationsSnap = await getDocs(collection(database, "events", eventDoc.id, "registrations"));
+                registrationsSnap.forEach(regDoc => {
+                    deleteOps.push(regDoc.ref);
+                });
+            }
+
+            if (deleteOps.length > 0) {
+                // Execute deletions in batches
+                const chunkSize = 450;
+                for (let i = 0; i < deleteOps.length; i += chunkSize) {
+                    const chunk = deleteOps.slice(i, i + chunkSize);
+                    const batch = writeBatch(database);
+                    chunk.forEach(ref => batch.delete(ref));
+                    await batch.commit();
+                }
+            }
+
+            console.log(`Deleted ${deleteOps.length} items (events + registrations) for user ${userId}`);
+
+            // 2. Delete the user document
             await deleteDoc(doc(database, "users", userId));
+
             // Note: This only deletes the Firestore document. Authentication record deletion requires Admin SDK or Cloud Function.
-            // For now, we just remove them from our DB which effectively bans them from logging in if we check DB on login.
 
             setUsers(users.filter(u => u.id !== userId));
-            alert(`User ${userName} deleted.`);
+            alert(`User ${userName} deleted. Removed ${querySnapshot.size} events and ${deleteOps.length - querySnapshot.size} registrations.`);
         } catch (error) {
             console.error("Error deleting user:", error);
             alert("Failed to delete user.");

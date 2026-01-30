@@ -14,6 +14,7 @@ import EventDetails from './pages/EventDetails';
 import AdminRequests from './pages/admin/AdminRequests';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminUserManagement from './pages/admin/AdminUserManagement';
+import AdminEventList from './pages/admin/AdminEventList';
 import OrganizerRequest from './pages/organizer-request/OrganizerRequest';
 import OrganizerEventForm from './pages/organizer/OrganizerEventForm';
 import OrganizerMyEvents from './pages/organizer/OrganizerMyEvents';
@@ -103,6 +104,7 @@ const InnerAppContent = ({ user, loadingAuth }) => {
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/admin/requests" element={<AdminRequests />} />
                     <Route path="/admin/users" element={<AdminUserManagement />} />
+                    <Route path="/admin/events" element={<AdminEventList />} />
                 </Route>
 
                 <Route path="/events/:eventId" element={<EventDetails />} />
