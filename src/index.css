@@ -4,6 +4,15 @@
     box-sizing: border-box;
 }
 
+/* Hide Default Scrollbar Globally */
+::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    scrollbar-width: none;
+}
+
 :root {
     font-family: 'Poppins', sans-serif;
     line-height: 1.5;

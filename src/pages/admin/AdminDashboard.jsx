@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import { database } from '../../services/firebase';
 import { collection, getDocs, query, where, onSnapshot } from 'firebase/firestore';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
@@ -7,7 +8,82 @@ import { useNavigate } from 'react-router-dom';
 import { exportToExcel } from '../../utils/excelExport';
 import './AdminDashboard.css';
 
+const CustomScrollbar = ({ containerRef, contentRef, isLoading }) => {
+    const [scrollProgress, setScrollProgress] = useState(5); // Default start at 5%
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        const content = contentRef?.current;
+        if (!container) return;
+
+        const updateScrollProgress = () => {
+            const { clientHeight, scrollHeight, scrollTop } = container;
+
+            // Only show if content overflows and NOT loading
+            if (!isLoading && scrollHeight > clientHeight) {
+                setIsVisible(true);
+
+                // Calculate scroll percentage (0 to 100)
+                const maxScroll = scrollHeight - clientHeight;
+                const progress = (scrollTop / maxScroll) * 100;
+
+                // Clamp between 5 (min visibility) and 100
+                setScrollProgress(Math.min(100, Math.max(5, progress)));
+            } else {
+                setIsVisible(false);
+            }
+        };
+
+        const handleScroll = () => {
+            requestAnimationFrame(updateScrollProgress);
+        };
+
+        // Listeners
+        container.addEventListener('scroll', handleScroll);
+        window.addEventListener('resize', updateScrollProgress);
+
+        // Initial calc & update when loading finishes
+        if (!isLoading) {
+            // Small delay to allow layout to settle after loading
+            setTimeout(updateScrollProgress, 300);
+            // Also run immediately just in case
+            updateScrollProgress();
+        }
+
+        // ResizeObserver
+        const resizeObserver = new ResizeObserver(() => {
+            if (!isLoading) updateScrollProgress();
+        });
+
+        if (content) {
+            resizeObserver.observe(content);
+        }
+        resizeObserver.observe(container);
+
+        return () => {
+            container.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', updateScrollProgress);
+            resizeObserver.disconnect();
+        };
+    }, [containerRef, contentRef, isLoading]);
+
+    if (!isVisible) return null;
+
+    return ReactDOM.createPortal(
+        <div className="scroll-progress-container visible">
+            <div
+                className="scroll-progress-fill"
+                style={{ height: `${scrollProgress}%` }}
+            />
+        </div>,
+        document.body
+    );
+};
+
 const AdminDashboard = () => {
+    const containerRef = useRef(null);
+    const contentRef = useRef(null);
     const navigate = useNavigate();
     const [stats, setStats] = useState({
         users: 0,
@@ -142,10 +218,11 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div className="admin-dashboard-container">
+        <div className="admin-dashboard-container" ref={containerRef}>
+            <CustomScrollbar containerRef={containerRef} contentRef={contentRef} isLoading={loading} />
             <Navbar />
 
-            <div className="dashboard-content-wrapper">
+            <div className="dashboard-content-wrapper" ref={contentRef}>
                 <header className="dashboard-header">
                     <div>
                         <h1 className="dashboard-title">Overview</h1>
