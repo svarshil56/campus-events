@@ -9,9 +9,7 @@ const OrganizerRequest = () => {
     const [formData, setFormData] = useState({
         clubName: '',
         category: 'Cultural',
-        eventDescription: '',
         requestedEventCount: 1,
-        phoneNumber: '',
     });
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState('');
@@ -49,8 +47,7 @@ const OrganizerRequest = () => {
         setError('');
         setSuccess('');
 
-        // Updated validation to check clubName instead of proposedEventName
-        if (!formData.phoneNumber || !formData.eventDescription || !formData.clubName) {
+        if (!formData.clubName) {
             setError('Please fill in all required fields.');
             setSubmitting(false);
             return;
@@ -63,11 +60,13 @@ const OrganizerRequest = () => {
                 userEmail: user.email,
                 userName: user.displayName || 'Unknown',
 
-                proposedEventName: formData.clubName, // Map clubName to expected Firestore field
+                proposedEventName: formData.clubName, // Keeping field name for backend compatibility
                 category: formData.category,
-                eventDescription: formData.eventDescription, /* Replaces justification */
                 requestedEventCount: parseInt(formData.requestedEventCount),
-                phoneNumber: formData.phoneNumber,
+
+                // Defaults for removed fields to keep DB consistent
+                eventDescription: 'No description provided (Simplified Request)',
+                phoneNumber: 'Not provided',
 
                 status: 'pending',
                 createdAt: serverTimestamp(),
@@ -86,9 +85,8 @@ const OrganizerRequest = () => {
     return (
         <div className="request-page-container">
             <Navbar />
-            <div className="landing-bg-overlay"></div> {/* Added Overlay */}
+            <div className="landing-bg-overlay"></div>
 
-            {/* request-content-wrapper removed to match Event Form centering */}
             <div className="request-card">
                 <h2 className="request-heading">{isOrganizer ? 'Get More Credits' : 'Pitch Your Event'}</h2>
                 {error && <p className="error-msg">{error}</p>}
@@ -120,18 +118,6 @@ const OrganizerRequest = () => {
                     </div>
 
                     <div className="form-group">
-                        <label>Event Description / Proposal</label>
-                        <textarea
-                            name="eventDescription"
-                            value={formData.eventDescription}
-                            onChange={handleChange}
-                            placeholder="Describe your event idea in detail to get approval..."
-                            className="form-textarea"
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
                         <label>Credits Requested (Events to Create)</label>
                         <input
                             type="number"
@@ -143,19 +129,7 @@ const OrganizerRequest = () => {
                             className="form-input"
                             required
                         />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Phone Number</label>
-                        <input
-                            type="tel"
-                            name="phoneNumber"
-                            value={formData.phoneNumber}
-                            onChange={handleChange}
-                            placeholder="+1 234 567 8900"
-                            className="form-input"
-                            required
-                        />
+                        <small style={{ color: '#ccc', display: 'block', marginTop: '5px' }}>Max 5 events per request</small>
                     </div>
 
                     <button type="submit" className="submit-btn" disabled={submitting}>
