@@ -12,6 +12,7 @@ import { useUnicornScript } from '../hooks/useUnicornScript';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [message, setMessage] = useState(''); // For success messages
     const navigateWithTransition = usePageTransition();
@@ -25,7 +26,7 @@ const Login = () => {
 
     useEffect(() => {
         // Redirect if already logged in
-        if (auth.currentUser) {
+        if (auth.currentUser && auth.currentUser.emailVerified) {
             // Instant redirect, no transition needed or maybe just standard?
             // If user goes to /login while logged in, just bounce them back.
             navigate(from, { replace: true });
@@ -37,7 +38,16 @@ const Login = () => {
         setError('');
         setMessage('');
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            if (!user.emailVerified) {
+                await signOut(auth); // Sign out immediately
+                setError('Email not verified. Please check your inbox.');
+                // Optional: You could add a button here to resend verification
+                return;
+            }
+
             navigateWithTransition(from, { replace: true, transitionText: "ACCESS GRANTED" });
         } catch (err) {
             console.error("Login Error:", err.code, err.message);
@@ -95,8 +105,15 @@ const Login = () => {
                         lastLogin: new Date()
                     }, { merge: true });
                 }
-            } catch (firestoreError) {
+            }
+            catch (firestoreError) {
                 console.warn("Could not save user profile to Firestore:", firestoreError);
+            }
+
+            if (!user.emailVerified) {
+                await signOut(auth);
+                setError('Google account email not verified. Please verify your email with Google.');
+                return;
             }
 
             navigateWithTransition(from, { replace: true, transitionText: "ACCESS GRANTED" });

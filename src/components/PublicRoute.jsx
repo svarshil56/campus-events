@@ -22,8 +22,8 @@ const PublicRoute = () => {
         return null;
     }
 
-    if (user) {
-        // User is logged in, redirect to home
+    if (user && user.emailVerified) {
+        // User is logged in AND verified, redirect to home
         return <Navigate to="/home" replace />;
     }
 

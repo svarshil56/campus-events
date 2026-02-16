@@ -37,7 +37,7 @@ const ProtectedRoutes = ({ roleRequired }) => {
         return <div style={{ color: 'white', textAlign: 'center', marginTop: '50px' }}>Loading...</div>;
     }
 
-    if (!user) {
+    if (!user || !user.emailVerified) {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
