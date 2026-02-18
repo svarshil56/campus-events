@@ -149,6 +149,32 @@
     transition: border-color 0.15s ease-in-out;
 }
 
+/* Password Toggle Wrapper */
+.password-group {
+    position: relative;
+    width: 100%;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.password-toggle:hover {
+    color: #FFD700;
+}
+
 .auth-input:focus {
     border-color: #FFD700;
     outline: none;

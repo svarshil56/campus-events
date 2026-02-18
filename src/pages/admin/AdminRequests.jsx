@@ -142,11 +142,9 @@ const AdminRequests = () => {
 
                             <div className="req-details">
                                 <p><strong>Email:</strong> {req.userEmail}</p>
-                                <p><strong>Phone:</strong> {req.phoneNumber}</p>
                                 <p><strong>Category:</strong> {req.category}</p>
-                                <p><strong>Proposal:</strong> {req.proposedEventName}</p>
+                                <p><strong>Club/Committee:</strong> {req.proposedEventName}</p>
                                 <p><strong>Credits Requested:</strong> {req.requestedEventCount}</p>
-                                <p className="justification">"{req.eventDescription}"</p>
                             </div>
 
                             <div className="req-actions">

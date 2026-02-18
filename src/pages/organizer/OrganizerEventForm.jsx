@@ -9,10 +9,13 @@ const OrganizerEventForm = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
-        tag: 'Concerts', // Default tag
+        tag: 'Concerts',
         description: '',
-        date: '',
-        time: '',
+        // New Date/Time Fields
+        startDate: '',
+        startTime: '',
+        endDate: '',
+        endTime: '',
         location: '',
         convenerName: '',
         convenerId: '',
@@ -29,7 +32,6 @@ const OrganizerEventForm = () => {
     // Limit Logic
     const [limitInfo, setLimitInfo] = useState({ created: 0, limit: 0, reached: false, loaded: false });
 
-    // Fetch user limit on mount
     React.useEffect(() => {
         const checkLimit = async () => {
             if (auth.currentUser) {
@@ -38,7 +40,7 @@ const OrganizerEventForm = () => {
                     if (userDoc.exists()) {
                         const data = userDoc.data();
                         const created = data.eventsCreated || 0;
-                        const limit = data.eventLimit || 2; // Default 2
+                        const limit = data.eventLimit || 2;
                         setLimitInfo({
                             created,
                             limit,
@@ -70,25 +72,52 @@ const OrganizerEventForm = () => {
             return;
         }
 
+        // Basic Validation
+        if (!formData.startDate || !formData.startTime || !formData.endDate || !formData.endTime) {
+            setStatus({ type: 'error', message: 'Please fill in all date and time fields.' });
+            return;
+        }
+
         setLoading(true);
         setStatus({ type: '', message: '' });
 
         try {
-            // Create a safe ID from the event name
+            // Create JavaScript Date Objects for Timestamps
+            const startDateTime = new Date(`${formData.startDate}T${formData.startTime}`);
+            const endDateTime = new Date(`${formData.endDate}T${formData.endTime}`);
+
+            if (endDateTime <= startDateTime) {
+                setStatus({ type: 'error', message: 'End time must be after start time.' });
+                setLoading(false);
+                return;
+            }
+
+            // Create display string (e.g., "Oct 20 • 6:00 PM")
+            const options = { month: 'short', day: 'numeric' };
+            const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+            const dateDisplay = `${startDateTime.toLocaleDateString('en-US', options)} • ${startDateTime.toLocaleTimeString('en-US', timeOptions)}`;
+
+            // Create a safe ID
             const docId = formData.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            const { Timestamp } = await import('firebase/firestore');
 
             // 1. Create Event
             await setDoc(doc(database, 'events', docId), {
                 title: formData.name,
                 tag: formData.tag,
                 description: formData.description,
-                date: `${formData.date} • ${formData.time}`,
+
+                // New Timestamp Fields for Logic
+                startTimestamp: Timestamp.fromDate(startDateTime),
+                endTimestamp: Timestamp.fromDate(endDateTime),
+
+                // Display Fields
+                date: dateDisplay, // Kept for backward compatibility with UI
                 location: formData.location,
                 venue: formData.location,
-                // Convener Info (For Admin/Organizer view)
+
                 convener: `${formData.convenerName} (${formData.convenerId})`,
                 deputy: `${formData.deputyName} (${formData.deputyId})`,
-                // Coordinator Info (for Contact Us)
                 contact1: `${formData.contact1Name} (${formData.contact1Phone})`,
                 contact2: `${formData.contact2Name} (${formData.contact2Phone})`,
                 organizerId: auth.currentUser ? auth.currentUser.uid : 'unknown',
@@ -100,16 +129,6 @@ const OrganizerEventForm = () => {
             // 2. Increment User's Event Counter
             if (auth.currentUser) {
                 const userRef = doc(database, "users", auth.currentUser.uid);
-                // `updateDoc` and `increment` are already imported from 'firebase/firestore' in previous steps (lines 200+ edits), 
-                // BUT let's verify imports at top of file.
-                // Ah, line 3 only has: import { collection, doc, setDoc } from 'firebase/firestore';
-                // I need to update the imports first or use dynamic import properly (awaiting outside).
-                // Let's use dynamic import *outside* to be safe if I can't touch top imports easily in one go? 
-                // No, standard way is better. 
-
-                // Since I cannot see the top imports easily in this replace_block context (it's line 3),
-                // I will use fully qualified dynamic import awaiting *before* the call.
-
                 const { updateDoc, increment } = await import('firebase/firestore');
                 await updateDoc(userRef, {
                     eventsCreated: increment(1)
@@ -118,18 +137,19 @@ const OrganizerEventForm = () => {
 
             setStatus({ type: 'success', message: 'Event added successfully!' });
 
-            // Redirect to home after a brief delay to show success message
             setTimeout(() => {
                 navigate('/home');
             }, 1000);
 
-            // ... reset form ...
+            // Reset form
             setFormData({
                 name: '',
                 tag: 'Concerts',
                 description: '',
-                date: '',
-                time: '',
+                startDate: '',
+                startTime: '',
+                endDate: '',
+                endTime: '',
                 location: '',
                 convenerName: '',
                 convenerId: '',
@@ -197,30 +217,55 @@ const OrganizerEventForm = () => {
                         />
                     </div>
 
-                    <div className="event-form-group">
-                        <label className="event-form-label" htmlFor="date">Date</label>
-                        <input
-                            required
-                            className="event-form-input"
-                            type="text"
-                            id="date"
-                            placeholder="e.g. Oct 20 or JAN 10"
-                            value={formData.date}
-                            onChange={handleChange}
-                        />
+                    {/* NEW DATE/TIME SECTION */}
+                    <div className="event-form-row">
+                        <div className="event-form-group half">
+                            <label className="event-form-label" htmlFor="startDate">Start Date</label>
+                            <input
+                                required
+                                className="event-form-input"
+                                type="date"
+                                id="startDate"
+                                value={formData.startDate}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="event-form-group half">
+                            <label className="event-form-label" htmlFor="startTime">Start Time</label>
+                            <input
+                                required
+                                className="event-form-input"
+                                type="time"
+                                id="startTime"
+                                value={formData.startTime}
+                                onChange={handleChange}
+                            />
+                        </div>
                     </div>
 
-                    <div className="event-form-group">
-                        <label className="event-form-label" htmlFor="time">Time / Duration</label>
-                        <input
-                            required
-                            className="event-form-input"
-                            type="text"
-                            id="time"
-                            placeholder="e.g. 6 PM or 48 Hrs"
-                            value={formData.time}
-                            onChange={handleChange}
-                        />
+                    <div className="event-form-row">
+                        <div className="event-form-group half">
+                            <label className="event-form-label" htmlFor="endDate">End Date</label>
+                            <input
+                                required
+                                className="event-form-input"
+                                type="date"
+                                id="endDate"
+                                value={formData.endDate}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="event-form-group half">
+                            <label className="event-form-label" htmlFor="endTime">End Time</label>
+                            <input
+                                required
+                                className="event-form-input"
+                                type="time"
+                                id="endTime"
+                                value={formData.endTime}
+                                onChange={handleChange}
+                            />
+                        </div>
                     </div>
 
                     <div className="event-form-group">
