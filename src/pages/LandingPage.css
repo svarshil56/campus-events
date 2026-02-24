@@ -19,7 +19,6 @@
 
 .event-filters {
   justify-content: center;
-  padding: 20px;
   gap: 10px;
   display: flex;
   flex-wrap: wrap;
@@ -93,11 +92,9 @@
   /* deep-dark */
   min-height: 100vh;
   width: 100%;
-  padding-top: 6rem;
-  /* py-24 */
-  padding-bottom: 6rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
   padding-left: 1.5rem;
-  /* px-6 */
   padding-right: 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -128,11 +125,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-  /* gap-8 */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 3rem;
-  /* pb-12 */
 }
 
 .events-header-content {
@@ -144,12 +137,10 @@
 
 .events-header-image {
   width: 100%;
-  max-width: 56rem;
+  max-width: 70rem;
   /* max-w-4xl */
   object-fit: contain;
   filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3));
-  margin-bottom: 1rem;
-  /* mb-4 */
 }
 
 .events-header-text {
