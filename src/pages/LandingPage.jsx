@@ -6,10 +6,17 @@ import Navbar from '../components/Navbar';
 import { motion } from 'framer-motion';
 import eventsTitleImage from '../assets/events-title.png';
 import './LandingPage.css';
+import { eventCoverDefaults } from '../utils/eventCovers';
 
 const LandingPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
+
+    // Helper to get a stable cover for events without one
+    const getStableCover = (id) => {
+        const index = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        return eventCoverDefaults[index % eventCoverDefaults.length];
+    };
 
     // Dual Filter State
     const [statusFilter, setStatusFilter] = useState('All');
@@ -165,56 +172,64 @@ const LandingPage = () => {
                                 className="event-card group"
                             >
                                 <div className="event-card-glow" />
-                                <div className="event-card-image" style={{ backgroundImage: `url(${event.image})` }}>
+                                <div className="event-card-image" style={{ backgroundImage: `url(${event.image || getStableCover(event.id)})` }}>
                                     <div className="event-card-overlay" />
                                 </div>
                                 <div className="event-card-content">
-                                    <div className="event-card-meta">
-                                        {event.computedStatus === 'Live' && (
-                                            <span className="live-badge">
-                                                <span className="live-dot"></span> LIVE
-                                            </span>
-                                        )}
-                                        <span className="event-tag">
-                                            {event.tag}
-                                        </span>
-                                        <span className="event-date">
-                                            {event.date}
-                                        </span>
-                                    </div>
-
                                     <div className="event-card-bottom">
+                                        <div className="event-card-meta">
+                                            {event.computedStatus === 'Live' && (
+                                                <span className="live-badge">
+                                                    <span className="live-dot"></span> LIVE
+                                                </span>
+                                            )}
+                                            <span className="event-tag">
+                                                {event.tag}
+                                            </span>
+                                            <span className="event-date">
+                                                {event.date}
+                                            </span>
+                                        </div>
+                                        
                                         <h3 className="event-title">
                                             {event.title}
                                         </h3>
-                                        <button
-                                            className="event-button"
-                                            onClick={() => navigate(event.path)}
-                                        >
-                                            {event.button}
-                                        </button>
 
-                                        {/* Progress Bar */}
-                                        <div className="event-progress-wrapper" style={{ marginTop: '1rem', width: '100%' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                                                <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
-                                                    Seats Filled
-                                                </span>
-                                                <span style={{ fontSize: '0.7rem', color: '#FFD700', fontWeight: 'bold' }}>
-                                                    {event.currentRegNo || 0} / 100
-                                                </span>
-                                            </div>
-                                            <div className="event-progress-bar-bg" style={{ width: '100%', height: '4px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
-                                                <div
-                                                    className="event-progress-bar-fill"
-                                                    style={{
-                                                        width: `${Math.min(((event.currentRegNo || 0) / 100) * 100, 100)}%`,
-                                                        height: '100%',
-                                                        backgroundColor: '#FFD700',
-                                                        borderRadius: '2px',
-                                                        boxShadow: '0 0 10px rgba(255,215,0,0.5)'
-                                                    }}
-                                                />
+                                        <p className="event-card-desc">
+                                            {event.description?.length > 100 
+                                                ? `${event.description.substring(0, 100)}...` 
+                                                : event.description}
+                                        </p>
+
+                                        <div className="event-card-actions">
+                                            <button
+                                                className="event-button"
+                                                onClick={() => navigate(event.path)}
+                                            >
+                                                {event.button}
+                                            </button>
+
+                                            {/* Progress Bar */}
+                                            <div className="event-progress-wrapper">
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                                                    <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
+                                                        Seats
+                                                    </span>
+                                                    <span style={{ fontSize: '0.6rem', color: '#FFD700', fontWeight: 'bold' }}>
+                                                        {event.currentRegNo || 0}/100
+                                                    </span>
+                                                </div>
+                                                <div className="event-progress-bar-bg" style={{ width: '60px', height: '4px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
+                                                    <div
+                                                        className="event-progress-bar-fill"
+                                                        style={{
+                                                            width: `${Math.min(((event.currentRegNo || 0) / 100) * 100, 100)}%`,
+                                                            height: '100%',
+                                                            backgroundColor: '#FFD700',
+                                                            borderRadius: '2px',
+                                                        }}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
