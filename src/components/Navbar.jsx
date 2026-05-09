@@ -209,10 +209,10 @@ const Navbar = () => {
                         <img src={aboutSignOutImg} alt="Sign Out" className="nav-img-link" />
                     </button>
                 )}
-                <div className="social-icons">
+                {/* <div className="social-icons">
                     <div className="social-icon">f</div>
                     <div className="social-icon">📷</div>
-                </div>
+                </div> */}
             </div>
         </nav>
     );
