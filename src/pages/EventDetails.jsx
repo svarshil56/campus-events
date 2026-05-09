@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
     doc,
@@ -94,9 +94,11 @@ export default function EventDetails() {
 
     const [processing, setProcessing] = useState(false);
 
+    const navigate = useNavigate();
+
     // Registration Handler
     async function handleRegister() {
-        if (!user) return alert("Please login first!");
+        if (!user) return navigate('/register');
         if (userRole === 'organizer') return alert("Organizers cannot join events.");
         if (regId) return alert("You are already registered!");
         if (processing) return;

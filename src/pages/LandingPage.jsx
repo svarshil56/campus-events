@@ -165,21 +165,25 @@ const LandingPage = () => {
                                 className="event-card group"
                             >
                                 <div className="event-card-glow" />
+                                <div className="event-card-image" style={{ backgroundImage: `url(${event.image})` }}>
+                                    <div className="event-card-overlay" />
+                                </div>
                                 <div className="event-card-content">
-                                    <div className="event-card-header">
-                                        <div className="event-card-meta">
-                                            {event.computedStatus === 'Live' && (
-                                                <span className="live-badge">
-                                                    <span className="live-dot"></span> LIVE
-                                                </span>
-                                            )}
-                                            <span className="event-tag">
-                                                {event.tag}
+                                    <div className="event-card-meta">
+                                        {event.computedStatus === 'Live' && (
+                                            <span className="live-badge">
+                                                <span className="live-dot"></span> LIVE
                                             </span>
-                                            <span className="event-date">
-                                                {event.date}
-                                            </span>
-                                        </div>
+                                        )}
+                                        <span className="event-tag">
+                                            {event.tag}
+                                        </span>
+                                        <span className="event-date">
+                                            {event.date}
+                                        </span>
+                                    </div>
+
+                                    <div className="event-card-bottom">
                                         <h3 className="event-title">
                                             {event.title}
                                         </h3>

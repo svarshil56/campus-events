@@ -4,6 +4,7 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 import { database, auth } from '../../services/firebase';
 import Navbar from '../../components/Navbar';
 import './OrganizerEventForm.css';
+import { getRandomCover } from '../../utils/eventCovers';
 
 const OrganizerEventForm = () => {
     const navigate = useNavigate();
@@ -24,7 +25,8 @@ const OrganizerEventForm = () => {
         contact1Name: '',
         contact1Phone: '',
         contact2Name: '',
-        contact2Phone: ''
+        contact2Phone: '',
+        image: getRandomCover()
     });
     const [status, setStatus] = useState({ type: '', message: '' });
     const [loading, setLoading] = useState(false);
@@ -106,6 +108,7 @@ const OrganizerEventForm = () => {
                 title: formData.name,
                 tag: formData.tag,
                 description: formData.description,
+                image: formData.image,
 
                 // New Timestamp Fields for Logic
                 startTimestamp: Timestamp.fromDate(startDateTime),
@@ -170,6 +173,10 @@ const OrganizerEventForm = () => {
 
     const eventTags = ['Concerts', 'Technical', 'Cultural', 'Sports', 'Workshops'];
 
+    const handleShuffleImage = () => {
+        setFormData(prev => ({ ...prev, image: getRandomCover() }));
+    };
+
     return (
         <div className="event-form-container">
             <Navbar />
@@ -177,6 +184,25 @@ const OrganizerEventForm = () => {
 
             <div className="event-form-wrapper">
                 <h2 className="event-form-title">Add New Event</h2>
+                
+                {/* Event Image Preview Section */}
+                <div className="event-image-preview-section">
+                    <div className="event-image-preview-card" style={{ backgroundImage: `url(${formData.image})` }}>
+                        <div className="preview-overlay">
+                            <span className="preview-tag">{formData.tag}</span>
+                            <h3 className="preview-title">{formData.name || "Event Title"}</h3>
+                        </div>
+                    </div>
+                    <button 
+                        type="button" 
+                        className="shuffle-btn"
+                        onClick={handleShuffleImage}
+                        title="Shuffle unique cover"
+                    >
+                        <span>✨ Shuffle Unique Cover</span>
+                    </button>
+                </div>
+
                 <form onSubmit={handleSubmit}>
                     <div className="event-form-group">
                         <label className="event-form-label" htmlFor="name">Event Name</label>

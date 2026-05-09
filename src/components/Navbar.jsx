@@ -85,9 +85,16 @@ const Navbar = () => {
         }
     };
 
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
+
     return (
         <nav className="landing-nav">
-            <div className="logo-container">
+            <div className="logo-container" onClick={scrollToTop} style={{ cursor: 'pointer' }}>
                 <img src={logoImg} alt="DAU Events" className="logo-img" />
             </div>
             <ul className="nav-links">
