@@ -21,6 +21,7 @@ import DescriptionSection from "../components/EventDetails/DescriptionSection";
 import StatsCard from "../components/EventDetails/StatsCard";
 
 import "./EventDetails.css";
+import { logActivity } from "../utils/activityLogger";
 
 export default function EventDetails() {
     const { eventId } = useParams();
@@ -145,6 +146,8 @@ export default function EventDetails() {
                 transaction.update(eventRef, { currentRegNo: next });
                 return newRegId;
             });
+
+            await logActivity(user.uid);
 
             setRegId(resultingRegId);
             alert("Registration Successful!");

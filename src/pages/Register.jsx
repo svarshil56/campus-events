@@ -7,6 +7,7 @@ import { createUserWithEmailAndPassword, signInWithPopup, updateProfile, signOut
 import { doc, setDoc } from "firebase/firestore";
 import { usePageTransition } from '../transition/usePageTransition';
 import { useUnicornScript } from '../hooks/useUnicornScript';
+import { logActivity } from '../utils/activityLogger';
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -39,6 +40,8 @@ const Register = () => {
                 role: 'student',
                 createdAt: new Date()
             });
+
+            await logActivity(userCredential.user.uid);
 
             await signOut(auth); // Force sign out so they have to login
             alert("Account created! PLEASE CHECK YOUR EMAIL to verify your account before logging in.");
