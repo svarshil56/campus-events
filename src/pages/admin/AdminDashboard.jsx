@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { database } from '../../services/firebase';
-import { collection, getDocs, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs, query, where, onSnapshot, collectionGroup, Timestamp } from 'firebase/firestore';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import Navbar from '../../components/Navbar';
 import { useNavigate } from 'react-router-dom';
@@ -110,17 +110,86 @@ const AdminDashboard = () => {
                 let totalReg = 0;
                 const popularityData = [];
                 const allEvents = [];
+                
+                // For Activity Chart (Unique Users per day)
+                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                const activitySets = {};
+                const lastSevenDaysNames = [];
+                const sevenDaysAgo = new Date();
+                sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+                sevenDaysAgo.setHours(0, 0, 0, 0);
 
-                eventsSnap.docs.forEach(doc => {
-                    const data = doc.data();
+                // Initialize last 7 days with empty Sets
+                for (let i = 6; i >= 0; i--) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    const dayName = days[d.getDay()];
+                    lastSevenDaysNames.push(dayName);
+                    activitySets[dayName] = new Set();
+                }
+
+                // 1. Process User Signups and Last Logins (from usersSnap)
+                usersSnap.forEach(userDoc => {
+                    const userData = userDoc.data();
+                    const createdAt = userData.createdAt?.toDate ? userData.createdAt.toDate() : (userData.createdAt ? new Date(userData.createdAt) : null);
+                    const lastLogin = userData.lastLogin?.toDate ? userData.lastLogin.toDate() : (userData.lastLogin ? new Date(userData.lastLogin) : null);
+
+                    if (createdAt && createdAt >= sevenDaysAgo) {
+                        const dayName = days[createdAt.getDay()];
+                        if (activitySets[dayName]) activitySets[dayName].add(userDoc.id);
+                    }
+                    if (lastLogin && lastLogin >= sevenDaysAgo) {
+                        const dayName = days[lastLogin.getDay()];
+                        if (activitySets[dayName]) activitySets[dayName].add(userDoc.id);
+                    }
+                });
+
+                // 2. Fetch Dedicated Daily Activity Records
+                try {
+                    const activitySnap = await getDocs(query(
+                        collection(database, "daily_activity"),
+                        where('timestamp', '>=', Timestamp.fromDate(sevenDaysAgo))
+                    ));
+                    activitySnap.forEach(doc => {
+                        const data = doc.data();
+                        if (data.timestamp) {
+                            const date = data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp);
+                            const dayName = days[date.getDay()];
+                            if (activitySets[dayName]) activitySets[dayName].add(data.uid);
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Could not fetch daily_activity logs:", e);
+                }
+
+                // 3. Fetch registrations per event
+                for (const eventDoc of eventsSnap.docs) {
+                    const data = eventDoc.data();
                     const regCount = Number(data.currentRegNo) || 0;
                     totalReg += regCount;
+                    
                     popularityData.push({
                         name: data.title,
                         registrations: regCount
                     });
-                    allEvents.push({ id: doc.id, ...data });
-                });
+                    allEvents.push({ id: eventDoc.id, ...data });
+
+                    try {
+                        const regsSnap = await getDocs(collection(database, "events", eventDoc.id, "registrations"));
+                        regsSnap.forEach(regDoc => {
+                            const regData = regDoc.data();
+                            if (regData.createdAt) {
+                                const date = regData.createdAt.toDate ? regData.createdAt.toDate() : new Date(regData.createdAt);
+                                if (date >= sevenDaysAgo) {
+                                    const dayName = days[date.getDay()];
+                                    if (activitySets[dayName]) activitySets[dayName].add(regData.uid);
+                                }
+                            }
+                        });
+                    } catch (e) {
+                        console.warn(`Error fetching regs for event ${eventDoc.id}:`, e);
+                    }
+                }
 
                 setLastEvents(allEvents);
 
@@ -146,17 +215,12 @@ const AdminDashboard = () => {
                     totalRegistrations: totalReg
                 }));
 
-                // 4. Mock Activity Data
-                const activityMock = [
-                    { name: 'Mon', active: 10 },
-                    { name: 'Tue', active: 25 },
-                    { name: 'Wed', active: 18 },
-                    { name: 'Thu', active: 30 },
-                    { name: 'Fri', active: 45 },
-                    { name: 'Sat', active: 60 },
-                    { name: 'Sun', active: 55 },
-                ];
-                setGraphData(activityMock);
+                // 4. Update Activity Graph with unique counts
+                const realGraphData = lastSevenDaysNames.map(name => ({
+                    name,
+                    active: activitySets[name].size
+                }));
+                setGraphData(realGraphData);
 
                 setLoading(false);
                 return () => unsubscribeRequests();
@@ -282,7 +346,7 @@ const AdminDashboard = () => {
                             {/* Main Activity Chart */}
                             <div className="chart-card">
                                 <div className="chart-header">
-                                    <div className="chart-title">Weekly User Activity</div>
+                                    <div className="chart-title">Active Users (Last 7 days)</div>
                                 </div>
                                 <ResponsiveContainer width="100%" height={300}>
                                     <LineChart data={graphData}>

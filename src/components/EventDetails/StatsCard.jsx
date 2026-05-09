@@ -1,8 +1,10 @@
 import React from 'react';
 import QRCode from "react-qr-code";
+import { useNavigate } from 'react-router-dom';
 
 const StatsCard = ({ event, user, userRole, regId, processing, onRegister }) => {
     const isStaff = userRole === 'organizer' || userRole === 'admin';
+    const navigate = useNavigate();
 
     return (
         <>
@@ -34,7 +36,10 @@ const StatsCard = ({ event, user, userRole, regId, processing, onRegister }) => 
                 {!isStaff && (
                     <>
                         {!user && (
-                            <button className="buy-ticket-btn" disabled>
+                            <button 
+                                className="buy-ticket-btn" 
+                                onClick={() => navigate('/register')}
+                            >
                                 Login to Register
                             </button>
                         )}

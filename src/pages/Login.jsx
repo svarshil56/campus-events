@@ -8,6 +8,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { usePageTransition } from '../transition/usePageTransition';
 import { useUnicornScript } from '../hooks/useUnicornScript';
+import { logActivity } from '../utils/activityLogger';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -42,10 +43,18 @@ const Login = () => {
             const user = userCredential.user;
 
             if (!user.emailVerified) {
-                await signOut(auth); // Sign out immediately
+                await import('firebase/auth').then(mod => mod.signOut(auth)); 
                 setError('Email not verified. Please check your inbox.');
-                // Optional: You could add a button here to resend verification
                 return;
+            }
+
+            // Update lastLogin and Log Activity
+            try {
+                const userRef = doc(database, "users", user.uid);
+                await setDoc(userRef, { lastLogin: new Date() }, { merge: true });
+                await logActivity(user.uid);
+            } catch (firestoreError) {
+                console.warn("Could not update login metadata:", firestoreError);
             }
 
             navigateWithTransition(from, { replace: true, transitionText: "ACCESS GRANTED" });
@@ -109,6 +118,8 @@ const Login = () => {
             catch (firestoreError) {
                 console.warn("Could not save user profile to Firestore:", firestoreError);
             }
+
+            await logActivity(user.uid);
 
             if (!user.emailVerified) {
                 await signOut(auth);
